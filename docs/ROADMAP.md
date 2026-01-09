@@ -30,22 +30,25 @@ Scrum board for the ETEG customer registration form assessment.
 
 ## Phase 3: UI Components
 
-- [ ] Set up ShadCN UI base components
-  - Button, Input, Label, Select, Textarea
+- [x] Set up ShadCN UI base components
+  - Button, Input, Label, Select, Textarea, Skeleton, Spinner
   - Form components (Form, FormField, FormItem, FormMessage)
-- [ ] Create color options constant (`RAINBOW_COLORS`)
-- [ ] Build `CustomerForm` component
+- [x] Build `CustomerForm` component
   - react-hook-form integration
   - Zod resolver for client validation
   - All required fields with proper labels
   - Submit handler with API call
-- [ ] Add loading and error states
-- [ ] Add success feedback (toast or redirect)
-- [ ] Add client component tests for `CustomerForm`
+- [x] Add loading and error states
+- [x] Add success feedback (toast or redirect)
+- [x] Create API fetch service (`app/lib/api/`)
+  - Type-safe fetch wrapper with generics
+  - Centralized error handling
+  - Request/response typing
+- [x] Add client component tests for `CustomerForm`
   - Form rendering
   - Field validation behavior
   - Submit handler interaction
-- [ ] Extra: Add input mask for CPF field
+- [x] Extra: Add input mask for CPF field
 
 ## Phase 4: Page Integration
 

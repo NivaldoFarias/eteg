@@ -1,0 +1,239 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { IMaskInput } from "react-imask";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import type { ReactElement } from "react";
+
+import { ApiError, createCustomer } from "@/lib/api";
+
+import { FavoriteColor } from "../../generated/prisma/enums";
+
+import { Button } from "./ui/button";
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Textarea } from "./ui/textarea";
+
+/** Form schema for client-side validation before transformation */
+const formSchema = z.object({
+	fullName: z
+		.string()
+		.min(2, "Full name must be at least 2 characters")
+		.max(255, "Full name must be at most 255 characters")
+		.trim(),
+	cpf: z.string().min(1, "CPF is required"),
+	email: z
+		.string()
+		.min(1, "Email is required")
+		.email("Please provide a valid email address")
+		.max(255, "Email must be at most 255 characters"),
+	favoriteColor: z.nativeEnum(FavoriteColor, { message: "Please select a valid color" }),
+	observations: z.string().max(1000, "Observations must be at most 1000 characters").optional(),
+});
+
+type FormInput = z.infer<typeof formSchema>;
+
+/** Color labels for user-friendly display */
+const COLOR_LABELS: Record<FavoriteColor, string> = {
+	[FavoriteColor.RED]: "Red",
+	[FavoriteColor.ORANGE]: "Orange",
+	[FavoriteColor.YELLOW]: "Yellow",
+	[FavoriteColor.GREEN]: "Green",
+	[FavoriteColor.BLUE]: "Blue",
+	[FavoriteColor.INDIGO]: "Indigo",
+	[FavoriteColor.VIOLET]: "Violet",
+};
+
+interface CustomerFormProps {
+	/** Callback invoked when form submission succeeds */
+	onSuccess?: () => void;
+}
+
+/**
+ * Customer registration form component
+ *
+ * Provides a form for collecting customer data with client-side validation using
+ * react-hook-form and Zod. Submits data to /api/customers endpoint.
+ *
+ * @param props Component props
+ *
+ * @returns Form component with all required fields
+ *
+ * @example
+ * ```tsx
+ * <CustomerForm onSuccess={() => console.log("Customer registered")} />
+ * ```
+ */
+export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [submitError, setSubmitError] = useState<string | null>(null);
+
+	const form = useForm<FormInput>({
+		resolver: zodResolver(formSchema),
+		defaultValues: { fullName: "", cpf: "", email: "", favoriteColor: undefined, observations: "" },
+	});
+
+	/**
+	 * Handles form submission by sending data to API
+	 *
+	 * @param data Validated customer input data
+	 */
+	async function onSubmit(data: FormInput): Promise<void> {
+		setIsSubmitting(true);
+		setSubmitError(null);
+
+		try {
+			const response = await createCustomer({
+				...data,
+				observations: data.observations || null,
+			});
+
+			if (response.success) {
+				toast.success("Registration Successful", {
+					description: "Your registration has been submitted successfully!",
+				});
+				form.reset();
+				onSuccess?.();
+			}
+		} catch (error) {
+			if (error instanceof ApiError) {
+				setSubmitError(error.message);
+				toast.error("Registration Failed", { description: error.message });
+			} else {
+				const errorMessage = "An unexpected error occurred. Please try again.";
+				setSubmitError(errorMessage);
+				toast.error("Registration Failed", { description: errorMessage });
+			}
+			console.error("Form submission error:", error);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}
+
+	return (
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+				<FormField
+					control={form.control}
+					name="fullName"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Full Name</FormLabel>
+							<FormControl>
+								<Input placeholder="Enter your full name" {...field} />
+							</FormControl>
+							<FormDescription>Your complete legal name</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="cpf"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>CPF</FormLabel>
+							<FormControl>
+								<IMaskInput
+									mask="000.000.000-00"
+									value={field.value}
+									onAccept={(value) => field.onChange(value)}
+									onBlur={field.onBlur}
+									placeholder="000.000.000-00"
+									className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+								/>
+							</FormControl>
+							<FormDescription>Brazilian tax identification number</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Email</FormLabel>
+							<FormControl>
+								<Input placeholder="your.email@example.com" {...field} />
+							</FormControl>
+							<FormDescription>We{`'`}ll use this to contact you</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="favoriteColor"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Favorite Color</FormLabel>
+							<Select onValueChange={field.onChange} defaultValue={field.value}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder="Select your favorite color" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									{Object.entries(COLOR_LABELS).map(([value, label]) => (
+										<SelectItem key={value} value={value}>
+											{label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<FormDescription>Choose your favorite rainbow color</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="observations"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Observations (Optional)</FormLabel>
+							<FormControl>
+								<Textarea
+									placeholder="Any additional comments or notes..."
+									className="min-h-24 resize-none"
+									{...field}
+									value={field.value ?? ""}
+								/>
+							</FormControl>
+							<FormDescription>
+								Share any additional information you{`'`}d like us to know
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				{submitError ?
+					<div className="rounded-md bg-red-50 p-4 text-sm text-red-800">{submitError}</div>
+				:	null}
+
+				<Button type="submit" disabled={isSubmitting} className="w-full">
+					{isSubmitting ? "Submitting..." : "Submit Registration"}
+				</Button>
+			</form>
+		</Form>
+	);
+}

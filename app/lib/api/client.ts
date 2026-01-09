@@ -84,14 +84,14 @@ export async function apiClient<T>(url: string, options?: RequestInit): Promise<
 
 		if (error instanceof TypeError && error.message.includes("fetch")) {
 			throw new ApiError(
-				"Network error. Please check your connection.",
+				"Erro de rede. Verifique sua conexão.",
 				StatusCodes.SERVICE_UNAVAILABLE,
 				"NETWORK_ERROR",
 			);
 		}
 
 		throw new ApiError(
-			"An unexpected error occurred. Please try again.",
+			"Ocorreu um erro inesperado. Tente novamente.",
 			StatusCodes.INTERNAL_SERVER_ERROR,
 			"UNKNOWN_ERROR",
 		);

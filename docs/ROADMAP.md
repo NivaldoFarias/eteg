@@ -52,8 +52,8 @@ Scrum board for the ETEG customer registration form assessment.
 
 ## Phase 4: Page Integration
 
-- [ ] Create main page with form
-- [ ] Style with Tailwind (responsive, centered layout)
+- [x] Create main page with form
+- [x] Style with Tailwind (responsive, centered layout)
 - [ ] Test full flow: form → API → database
 - [ ] Add integration tests for page components
 - [ ] Update README with usage instructions

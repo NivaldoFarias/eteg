@@ -65,7 +65,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<CustomerC
 				{
 					success: false,
 					error: "VALIDATION_ERROR",
-					message: firstError?.message ?? "Invalid request data",
+					message: firstError?.message ?? "Dados de solicitação inválidos",
 				},
 				{ status: StatusCodes.BAD_REQUEST },
 			);
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<CustomerC
 				{
 					success: false,
 					error: "DUPLICATE_ENTRY",
-					message: `A customer with this ${duplicateField} already exists`,
+					message: `Um cliente com este ${duplicateField} já existe`,
 				},
 				{ status: StatusCodes.CONFLICT },
 			);

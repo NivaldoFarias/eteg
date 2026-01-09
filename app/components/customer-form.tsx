@@ -31,30 +31,28 @@ import { Textarea } from "./ui/textarea";
 const formSchema = z.object({
 	fullName: z
 		.string()
-		.min(2, "Full name must be at least 2 characters")
-		.max(255, "Full name must be at most 255 characters")
+		.min(2, "Nome completo deve ter no mínimo 2 caracteres")
+		.max(255, "Nome completo deve ter no máximo 255 caracteres")
 		.trim(),
-	cpf: z.string().min(1, "CPF is required"),
+	cpf: z.string().min(1, "CPF é obrigatório"),
 	email: z
-		.string()
-		.min(1, "Email is required")
-		.email("Please provide a valid email address")
-		.max(255, "Email must be at most 255 characters"),
-	favoriteColor: z.nativeEnum(FavoriteColor, { message: "Please select a valid color" }),
-	observations: z.string().max(1000, "Observations must be at most 1000 characters").optional(),
+		.email("Forneça um endereço de email válido")
+		.max(255, "Email deve ter no máximo 255 caracteres"),
+	favoriteColor: z.enum(FavoriteColor, { message: "Selecione uma cor válida" }),
+	observations: z.string().max(1000, "As observações devem ter no máximo 1000 caracteres").optional(),
 });
 
 type FormInput = z.infer<typeof formSchema>;
 
 /** Color labels for user-friendly display */
 const COLOR_LABELS: Record<FavoriteColor, string> = {
-	[FavoriteColor.RED]: "Red",
-	[FavoriteColor.ORANGE]: "Orange",
-	[FavoriteColor.YELLOW]: "Yellow",
-	[FavoriteColor.GREEN]: "Green",
-	[FavoriteColor.BLUE]: "Blue",
-	[FavoriteColor.INDIGO]: "Indigo",
-	[FavoriteColor.VIOLET]: "Violet",
+	[FavoriteColor.RED]: "Vermelho",
+	[FavoriteColor.ORANGE]: "Laranja",
+	[FavoriteColor.YELLOW]: "Amarelo",
+	[FavoriteColor.GREEN]: "Verde",
+	[FavoriteColor.BLUE]: "Azul",
+	[FavoriteColor.INDIGO]: "Índigo",
+	[FavoriteColor.VIOLET]: "Violeta",
 };
 
 interface CustomerFormProps {
@@ -102,8 +100,8 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 			});
 
 			if (response.success) {
-				toast.success("Registration Successful", {
-					description: "Your registration has been submitted successfully!",
+				toast.success("Cadastro realizado com sucesso", {
+					description: "Seu cadastro foi enviado com sucesso!",
 				});
 				form.reset();
 				onSuccess?.();
@@ -111,11 +109,11 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 		} catch (error) {
 			if (error instanceof ApiError) {
 				setSubmitError(error.message);
-				toast.error("Registration Failed", { description: error.message });
+				toast.error("Falha no cadastro", { description: error.message });
 			} else {
-				const errorMessage = "An unexpected error occurred. Please try again.";
+				const errorMessage = "Ocorreu um erro inesperado. Tente novamente.";
 				setSubmitError(errorMessage);
-				toast.error("Registration Failed", { description: errorMessage });
+				toast.error("Falha no cadastro", { description: errorMessage });
 			}
 			console.error("Form submission error:", error);
 		} finally {
@@ -131,11 +129,11 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					name="fullName"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Full Name</FormLabel>
+							<FormLabel>Nome Completo</FormLabel>
 							<FormControl>
-								<Input placeholder="Enter your full name" {...field} />
+								<Input placeholder="Digite seu nome completo" {...field} />
 							</FormControl>
-							<FormDescription>Your complete legal name</FormDescription>
+							<FormDescription>Seu nome completo</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -157,7 +155,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 									className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
 								/>
 							</FormControl>
-							<FormDescription>Brazilian tax identification number</FormDescription>
+							<FormDescription>Cadastro de Pessoa Física</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -170,9 +168,9 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 						<FormItem>
 							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input placeholder="your.email@example.com" {...field} />
+								<Input placeholder="seu.email@example.com" {...field} />
 							</FormControl>
-							<FormDescription>We{`'`}ll use this to contact you</FormDescription>
+							<FormDescription>Usaremos para contatá-lo</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -183,11 +181,11 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					name="favoriteColor"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Favorite Color</FormLabel>
+							<FormLabel>Cor Favorita</FormLabel>
 							<Select onValueChange={field.onChange} defaultValue={field.value}>
 								<FormControl>
 									<SelectTrigger>
-										<SelectValue placeholder="Select your favorite color" />
+										<SelectValue placeholder="Selecione sua cor favorita" />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
@@ -198,7 +196,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 									))}
 								</SelectContent>
 							</Select>
-							<FormDescription>Choose your favorite rainbow color</FormDescription>
+							<FormDescription>Escolha sua cor favorita do arco-íris</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -209,17 +207,17 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					name="observations"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Observations (Optional)</FormLabel>
+							<FormLabel>Observações (Opcional)</FormLabel>
 							<FormControl>
 								<Textarea
-									placeholder="Any additional comments or notes..."
+									placeholder="Comentários ou notas adicionais..."
 									className="min-h-24 resize-none"
 									{...field}
 									value={field.value ?? ""}
 								/>
 							</FormControl>
 							<FormDescription>
-								Share any additional information you{`'`}d like us to know
+								Informações adicionais opcionais
 							</FormDescription>
 							<FormMessage />
 						</FormItem>
@@ -231,7 +229,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 				:	null}
 
 				<Button type="submit" disabled={isSubmitting} className="w-full">
-					{isSubmitting ? "Submitting..." : "Submit Registration"}
+					{isSubmitting ? "Enviando..." : "Enviar Cadastro"}
 				</Button>
 			</form>
 		</Form>

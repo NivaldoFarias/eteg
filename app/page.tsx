@@ -1,11 +1,36 @@
 import type { ReactElement } from "react";
 
-/** Homepage - Customer Registration Form */
+import { CustomerForm } from "@/components/customer-form";
+
+/**
+ * Customer Registration Page
+ *
+ * Main page displaying the customer registration form with a responsive,
+ * centered layout. Collects customer data and persists to PostgreSQL.
+ *
+ * @returns Page component with registration form
+ */
 export default function Page(): ReactElement {
 	return (
-		<main className="flex flex-1 flex-col items-center justify-center p-8">
-			<h1 className="text-3xl font-bold">Cadastro de Clientes</h1>
-			<p className="mt-4 text-gray-600">Em desenvolvimento</p>
+		<main className="flex flex-1 flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+			<div className="w-full max-w-md space-y-8">
+				<Header />
+				<CustomerForm />
+			</div>
 		</main>
 	);
+
+	/** Page header with title and description */
+	function Header(): ReactElement {
+		return (
+			<header className="text-center">
+				<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+					Cadastro de Clientes
+				</h1>
+				<p className="mt-2 text-sm text-gray-600 sm:text-base">
+					Preencha o formulário abaixo para registrar um novo cliente
+				</p>
+			</header>
+		);
+	}
 }

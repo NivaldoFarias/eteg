@@ -1,159 +1,159 @@
-# Eteg - Customer Registration System
+# Eteg - Sistema de Cadastro de Clientes
 
-A simple customer registration form built with Next.js 15, React 19, Tailwind CSS v4, and PostgreSQL.
+Um formulário simples de registro de clientes construído com Next.js 15, React 19, Tailwind CSS v4 e PostgreSQL.
 
-## Tech Stack
+## Stack
 
 - **Frontend**: Next.js 15, React 19, Tailwind CSS v4, ShadCN UI
 - **Backend**: Next.js API Routes, Prisma ORM
 - **Database**: PostgreSQL 16
 - **Runtime**: Bun
 
-## Getting Started
+## Iniciando
 
-### Prerequisites
+### Pré-requisitos
 
-- [Bun](https://bun.sh/) (latest)
-- [Docker](https://www.docker.com/) (for PostgreSQL)
+- [Bun](https://bun.sh/) (versão mais recente)
+- [Docker](https://www.docker.com/) (para PostgreSQL)
 
-### Development
+### Desenvolvimento
 
-1. Install dependencies:
+1. Instale as dependências:
 
 ```bash
 bun install
 ```
 
-2. Start PostgreSQL via Docker:
+2. Inicie o PostgreSQL via Docker:
 
 ```bash
 bun run docker:up
 ```
 
-3. Run database migrations:
+3. Execute as migrações do banco de dados:
 
 ```bash
 bun run db:migrate
 ```
 
-4. Start the development server:
+4. Inicie o servidor de desenvolvimento:
 
 ```bash
 bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Abra [http://localhost:3000](http://localhost:3000) para ver a aplicação.
 
 ## Scripts
 
-| Command               | Description                |
-| --------------------- | -------------------------- |
-| `bun run dev`         | Start development server   |
-| `bun run build`       | Build for production       |
-| `bun run start`       | Start production server    |
-| `bun run lint`        | Run ESLint                 |
-| `bun run type-check`  | Run TypeScript type check  |
-| `bun run test`        | Run unit tests             |
-| `bun run test:watch`  | Run tests in watch mode    |
-| `bun run db:migrate`  | Run database migrations    |
-| `bun run db:studio`   | Open Prisma Studio         |
-| `bun run docker:up`   | Start PostgreSQL container |
-| `bun run docker:down` | Stop PostgreSQL container  |
+| Comando               | Descrição                               |
+| --------------------- | --------------------------------------- |
+| `bun run dev`         | Iniciar servidor de desenvolvimento     |
+| `bun run build`       | Build para produção                     |
+| `bun run start`       | Iniciar servidor de produção            |
+| `bun run lint`        | Executar ESLint                         |
+| `bun run type-check`  | Executar verificação de tipo TypeScript |
+| `bun run test`        | Executar testes unitários               |
+| `bun run test:watch`  | Executar testes em modo watch           |
+| `bun run db:migrate`  | Executar migrações do banco             |
+| `bun run db:studio`   | Abrir Prisma Studio                     |
+| `bun run docker:up`   | Iniciar container PostgreSQL            |
+| `bun run docker:down` | Parar container PostgreSQL              |
 
-## Database Schema
+## Schema do Banco de Dados
 
-### Customer Table
+### Tabela Customer
 
-| Field           | Type                 | Description                        |
-| --------------- | -------------------- | ---------------------------------- |
-| `id`            | `String` (CUID)      | Primary key                        |
-| `fullName`      | `String`             | Customer's full name (2-255 chars) |
-| `cpf`           | `String` (unique)    | Brazilian tax ID (11 digits)       |
-| `email`         | `String` (unique)    | Email address                      |
-| `favoriteColor` | `FavoriteColor` enum | One of the rainbow colors          |
-| `observations`  | `String?`            | Optional notes (max 1000 chars)    |
-| `createdAt`     | `DateTime`           | Registration timestamp             |
+| Campo           | Tipo                 | Descrição                                   |
+| --------------- | -------------------- | ------------------------------------------- |
+| `id`            | `String` (CUID)      | Chave primária                              |
+| `fullName`      | `String`             | Nome completo do cliente (2-255 caracteres) |
+| `cpf`           | `String` (único)     | CPF (11 dígitos)                            |
+| `email`         | `String` (único)     | Endereço de email                           |
+| `favoriteColor` | `FavoriteColor` enum | Uma das cores do arco-íris                  |
+| `observations`  | `String?`            | Notas opcionais (máx 1000 caracteres)       |
+| `createdAt`     | `DateTime`           | Timestamp do cadastro                       |
 
-### FavoriteColor Enum
+### Enum FavoriteColor
 
 `RED` | `ORANGE` | `YELLOW` | `GREEN` | `BLUE` | `INDIGO` | `VIOLET`
 
-## API Reference
+## Referência da API
 
 ### POST /api/customers
 
-Creates a new customer registration.
+Cria um novo registro de cliente.
 
-#### Request Body
+#### Corpo da Solicitação
 
 ```json
 {
-	"fullName": "John Doe",
+	"fullName": "João Silva",
 	"cpf": "529.982.247-25",
-	"email": "john@example.com",
+	"email": "joao@example.com",
 	"favoriteColor": "BLUE",
-	"observations": "Optional notes"
+	"observations": "Notas opcionais"
 }
 ```
 
-| Field           | Type     | Required | Description                                              |
-| --------------- | -------- | -------- | -------------------------------------------------------- |
-| `fullName`      | `string` | Yes      | 2-255 characters                                         |
-| `cpf`           | `string` | Yes      | Valid Brazilian CPF (with or without mask)               |
-| `email`         | `string` | Yes      | Valid email address                                      |
-| `favoriteColor` | `string` | Yes      | One of: RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET |
-| `observations`  | `string` | No       | Max 1000 characters                                      |
+| Campo           | Tipo     | Obrigatório | Descrição                                                |
+| --------------- | -------- | ----------- | -------------------------------------------------------- |
+| `fullName`      | `string` | Sim         | 2-255 caracteres                                         |
+| `cpf`           | `string` | Sim         | CPF válido (com ou sem máscara)                          |
+| `email`         | `string` | Sim         | Endereço de email válido                                 |
+| `favoriteColor` | `string` | Sim         | Uma de: RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET |
+| `observations`  | `string` | Não         | Máx 1000 caracteres                                      |
 
-#### Responses
+#### Respostas
 
-**201 Created** - Customer successfully registered
+**201 Created** - Cliente registrado com sucesso
 
 ```json
 {
 	"success": true,
 	"data": {
 		"id": "clx1234567890",
-		"fullName": "John Doe",
-		"email": "john@example.com",
+		"fullName": "João Silva",
+		"email": "joao@example.com",
 		"favoriteColor": "BLUE",
 		"createdAt": "2026-01-09T00:00:00.000Z"
 	}
 }
 ```
 
-**400 Bad Request** - Validation error
+**400 Bad Request** - Erro de validação
 
 ```json
 {
 	"success": false,
 	"error": "VALIDATION_ERROR",
-	"message": "CPF is invalid"
+	"message": "CPF é inválido"
 }
 ```
 
-**409 Conflict** - Duplicate CPF or email
+**409 Conflict** - CPF ou email duplicado
 
 ```json
 {
 	"success": false,
 	"error": "DUPLICATE_ENTRY",
-	"message": "A customer with this CPF already exists"
+	"message": "Um cliente com este CPF já existe"
 }
 ```
 
-**500 Internal Server Error** - Server error
+**500 Internal Server Error** - Erro de servidor
 
 ```json
 {
 	"success": false,
 	"error": "INTERNAL_ERROR",
-	"message": "An unexpected error occurred. Please try again later."
+	"message": "Ocorreu um erro inesperado. Tente novamente mais tarde."
 }
 ```
 
-## Docker Production
+## Docker para Produção
 
-Build and run with Docker:
+Construa e execute com Docker:
 
 ```bash
 docker build -f docker/Dockerfile -t eteg --target production .

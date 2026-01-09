@@ -29,34 +29,34 @@ function stripCpfMask(cpf: string): string {
  */
 export const customerInputSchema = z.object({
 	fullName: z
-		.string({ error: "Full name is required" })
-		.min(2, "Full name must be at least 2 characters")
-		.max(255, "Full name must be at most 255 characters")
+		.string({ error: "Nome completo é obrigatório" })
+		.min(2, "Nome completo deve ter no mínimo 2 caracteres")
+		.max(255, "Nome completo deve ter no máximo 255 caracteres")
 		.trim(),
 
 	cpf: z
-		.string({ error: "CPF is required" })
+		.string({ error: "CPF é obrigatório" })
 		.transform(stripCpfMask)
 		.refine((value) => value.length === 11, {
-			message: "CPF must have exactly 11 digits",
+			message: "CPF deve ter exatamente 11 dígitos",
 		})
 		.refine((value) => validateCpf(value), {
-			message: "CPF is invalid",
+			message: "CPF é inválido",
 		}),
 
 	email: z
-		.email("Please provide a valid email address")
-		.max(255, "Email must be at most 255 characters")
+		.email("Forneça um endereço de email válido")
+		.max(255, "Email deve ter no máximo 255 caracteres")
 		.toLowerCase()
 		.trim(),
 
 	favoriteColor: z.enum(FAVORITE_COLORS, {
-		error: "Please select a valid color",
+		error: "Selecione uma cor válida",
 	}),
 
 	observations: z
 		.string()
-		.max(1000, "Observations must be at most 1000 characters")
+		.max(1000, "As observações devem ter no máximo 1000 caracteres")
 		.trim()
 		.optional()
 		.nullable()

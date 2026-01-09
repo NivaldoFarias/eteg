@@ -6,3 +6,31 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+/**
+ * Rainbow color options for favorite color selection
+ */
+enum FavoriteColor {
+  RED
+  ORANGE
+  YELLOW
+  GREEN
+  BLUE
+  INDIGO
+  VIOLET
+}
+
+/**
+ * Customer registration data
+ */
+model Customer {
+  id            String        @id @default(cuid())
+  fullName      String
+  cpf           String        @unique
+  email         String        @unique
+  favoriteColor FavoriteColor
+  observations  String?
+  createdAt     DateTime      @default(now())
+
+  @@map("customers")
+}

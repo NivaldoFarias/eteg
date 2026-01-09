@@ -16,7 +16,7 @@ export enum EnvironmentDefaults {
 	NODE_ENV = RuntimeEnvironment.Development,
 
 	/** Default database connection string for local development */
-	DATABASE_URL = "postgresql://user:password@localhost:5432/eteg",
+	DATABASE_URL = "postgresql://eteg:eteg_dev_password@localhost:5432/eteg",
 
 	/** Default application URL for local development */
 	APP_URL = "http://localhost:3000",

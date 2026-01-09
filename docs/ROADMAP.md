@@ -4,11 +4,11 @@ Scrum board for the ETEG customer registration form assessment.
 
 ## Phase 1: Database Schema
 
-- [ ] Define `Customer` model in `prisma/schema.prisma`
+- [x] Define `Customer` model in `prisma/schema.prisma`
   - Fields: `id`, `fullName`, `cpf`, `email`, `favoriteColor`, `observations`, `createdAt`
   - Unique constraints on `cpf` and `email`
-- [ ] Create initial migration
-- [ ] Verify schema with `bun run db:generate`
+- [x] Create initial migration
+- [x] Verify schema with `bun run db:generate`
 
 ## Phase 2: API Layer
 

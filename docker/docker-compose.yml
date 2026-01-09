@@ -4,17 +4,17 @@ services:
     container_name: eteg-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: eteg
-      POSTGRES_USER: eteg
-      POSTGRES_PASSWORD: eteg_dev_password
+      POSTGRES_DB: ${DATABASE_NAME:-eteg}
+      POSTGRES_USER: ${DATABASE_USER:-eteg}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-eteg_dev_password}
     ports:
-      - "5432:5432"
+      - "5432:${DATABASE_PORT:-5432}"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - eteg_postgres_data:/var/lib/postgresql/data
     networks:
       - eteg-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U eteg -d eteg"]
+      test: [ "CMD-SHELL", "pg_isready -U eteg -d eteg" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -23,14 +23,14 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
-      target: development
+      target: ${DOCKER_BUILD_TARGET:-development}
     container_name: eteg-app
     restart: unless-stopped
     environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://eteg:eteg_dev_password@db:5432/eteg
+      - NODE_ENV=${NODE_ENV:-development}
+      - DATABASE_URL=${DATABASE_URL:-postgresql://eteg:eteg_dev_password@db:5432/eteg}
     ports:
-      - "3000:3000"
+      - "3000:${APP_PORT:-3000}"
     volumes:
       - ..:/app
       - /app/node_modules
@@ -43,7 +43,8 @@ services:
     command: sh -c "bun run db:generate && bun run db:migrate && bun run dev"
 
 volumes:
-  postgres_data:
+  eteg_postgres_data:
+
 
 networks:
   eteg-network:

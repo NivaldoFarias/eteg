@@ -1,27 +1,28 @@
-import path, { dirname } from "node:path";
+import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
+import eslintNextPlugin from "@next/eslint-plugin-next";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import eslintPluginTailwind from "eslint-plugin-tailwindcss";
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({ baseDirectory: __dirname });
-
 export default defineConfig(
-	{
-		ignores: [".next/**", "node_modules/**", "dist/**", "out/**", "generated/prisma/**"],
-	},
-	...compat.extends("plugin:@next/next/recommended"),
-	...compat.extends("plugin:@next/next/core-web-vitals"),
+	globalIgnores([
+		".next/**",
+		"out/**",
+		"build/**",
+		"next-env.d.ts",
+		"generated/prisma/**",
+		"**/*.md",
+		"**/*.json",
+		"**/*.yml",
+		"**/*.yaml",
+	]),
 	{
 		files: ["**/*.{ts,tsx,js,jsx}"],
 		plugins: {
@@ -29,6 +30,7 @@ export default defineConfig(
 			"react-hooks": eslintPluginReactHooks,
 			"tailwindcss": eslintPluginTailwind,
 			"@typescript-eslint": tseslint.plugin,
+			"next": eslintNextPlugin,
 		},
 		languageOptions: {
 			parser: tseslint.parser,

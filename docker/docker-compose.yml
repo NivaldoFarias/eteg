@@ -14,7 +14,7 @@ services:
     networks:
       - eteg-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U eteg -d eteg" ]
+      test: ["CMD-SHELL", "pg_isready -U eteg -d eteg"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,7 +44,6 @@ services:
 
 volumes:
   eteg_postgres_data:
-
 
 networks:
   eteg-network:

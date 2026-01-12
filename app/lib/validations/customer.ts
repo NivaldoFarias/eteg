@@ -41,6 +41,7 @@ export const customerInputSchema = z.object({
 		.refine((value) => validateCpf(value), { message: "CPF inválido" }),
 
 	email: z
+		.string({ error: "Email é obrigatório" })
 		.email("Forneça um endereço de email válido")
 		.max(255, "Email deve ter no máximo 255 caracteres")
 		.toLowerCase()

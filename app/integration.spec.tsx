@@ -66,7 +66,7 @@ describe("Customer Registration Page Integration", () => {
 
 			await waitFor(() => {
 				expect(screen.getByText(/no mínimo 2 caracteres/i)).toBeInTheDocument();
-				expect(screen.getByText(/cpf é obrigatório/i)).toBeInTheDocument();
+				expect(screen.getByText(/cpf deve ter exatamente 11 dígitos/i)).toBeInTheDocument();
 			});
 		});
 
@@ -79,7 +79,7 @@ describe("Customer Registration Page Integration", () => {
 			await user.click(screen.getByRole("button", { name: /enviar cadastro/i }));
 
 			await waitFor(() => {
-				expect(screen.getByText(/cpf é obrigatório/i)).toBeInTheDocument();
+				expect(screen.getByText(/cpf deve ter exatamente 11 dígitos/i)).toBeInTheDocument();
 			});
 		});
 

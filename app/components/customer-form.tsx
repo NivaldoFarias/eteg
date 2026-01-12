@@ -94,6 +94,8 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
+		mode: "onSubmit",
+		reValidateMode: "onChange",
 		defaultValues: { fullName: "", cpf: "", email: "", favoriteColor: undefined, observations: "" },
 	});
 
@@ -298,7 +300,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					<div className="rounded-md bg-red-50 p-4 text-sm text-red-800">{submitError}</div>
 				:	null}
 
-				<Button type="submit" disabled={isSubmitting || !form.formState.isValid} className="w-full">
+				<Button type="submit" disabled={isSubmitting} className="w-full">
 					{isSubmitting ?
 						<>
 							<Spinner className="mr-2 h-4 w-4" />

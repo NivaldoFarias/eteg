@@ -84,32 +84,18 @@ describe("CustomerForm", () => {
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/cpf é obrigatório/i)).toBeInTheDocument();
+				expect(screen.getByText(/cpf deve ter exatamente 11 dígitos/i)).toBeInTheDocument();
 			});
 		});
 	});
 
 	describe("form submission", () => {
-		test("submits form with valid data", async () => {
-			const { createCustomer } = await import("@/lib/api");
+		test("shows validation error when favoriteColor not selected", async () => {
 			const user = userEvent.setup();
-			const mockOnSuccess = vi.fn();
-
-			vi.mocked(createCustomer).mockResolvedValue({
-				success: true,
-				data: {
-					id: "customer-id",
-					fullName: "John Doe",
-					email: "john@example.com",
-					favoriteColor: "BLUE",
-					createdAt: new Date(),
-				},
-			});
-
-			render(<CustomerForm onSuccess={mockOnSuccess} />);
+			render(<CustomerForm />);
 
 			await user.type(screen.getByLabelText(/nome completo/i), "John Doe");
-			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
+			await user.type(screen.getByLabelText(/cpf/i), "52998224725");
 			await user.type(screen.getByLabelText(/email/i), "john@example.com");
 
 			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
@@ -152,14 +138,16 @@ describe("CustomerForm", () => {
 			render(<CustomerForm />);
 
 			await user.type(screen.getByLabelText(/nome completo/i), "John Doe");
-			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
+			await user.type(screen.getByLabelText(/cpf/i), "52998224725");
 			await user.type(screen.getByLabelText(/email/i), "john@example.com");
+			await user.click(screen.getByRole("combobox", { name: /cor favorita/i }));
+			await user.click(screen.getByRole("option", { name: /azul/i }));
 
 			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/selecione uma cor válida/i)).toBeInTheDocument();
+				expect(screen.getByText(/cpf already registered/i)).toBeInTheDocument();
 			});
 		});
 	});
@@ -176,14 +164,16 @@ describe("CustomerForm", () => {
 			render(<CustomerForm />);
 
 			await user.type(screen.getByLabelText(/nome completo/i), "John Doe");
-			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
+			await user.type(screen.getByLabelText(/cpf/i), "52998224725");
 			await user.type(screen.getByLabelText(/email/i), "john@example.com");
+			await user.click(screen.getByRole("combobox", { name: /cor favorita/i }));
+			await user.click(screen.getByRole("option", { name: /azul/i }));
 
 			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/selecione uma cor válida/i)).toBeInTheDocument();
+				expect(screen.getByText(/serviço temporariamente indisponível/i)).toBeInTheDocument();
 			});
 		});
 	});

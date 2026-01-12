@@ -3,7 +3,6 @@ import { describe, expect, test, vi } from "vitest";
 
 import Page from "./page";
 
-// Mock the CustomerForm component to isolate page testing
 vi.mock("@/components/customer-form", () => ({
 	CustomerForm: () => <div data-testid="customer-form">Mocked Customer Form</div>,
 }));
@@ -63,7 +62,6 @@ describe("Customer Registration Page", () => {
 			const h1 = screen.getByRole("heading", { level: 1 });
 			expect(h1).toBeInTheDocument();
 
-			// Should only have one h1 on the page
 			const allH1s = screen.getAllByRole("heading", { level: 1 });
 			expect(allH1s).toHaveLength(1);
 		});

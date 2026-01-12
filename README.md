@@ -1,20 +1,32 @@
 # Eteg - Sistema de Cadastro de Clientes
 
-Um formulário simples de registro de clientes construído com Next.js 15, React 19, Tailwind CSS v4 e PostgreSQL.
+Um formulário simples de registro de clientes construído com Next.js, React, Tailwind CSS, Prisma e PostgreSQL.
+
+<!-- > [!IMPORTANT]
+> **Live Demo**: [https://eteg-client.onrender.com](https://eteg-client.onrender.com) -->
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.1-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
+[![Bun](https://img.shields.io/badge/Bun-1.3.5-000000?logo=bun&logoColor=white)](https://bun.sh/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-7.2-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
 ## Stack
 
-- **Frontend**: Next.js 15, React 19, Tailwind CSS v4, ShadCN UI
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: PostgreSQL 16
-- **Runtime**: Bun
+- **Frontend**: Next.js 16, React 19, Tailwind CSS v4, ShadCN UI
+- **Backend**: Next.js API Routes, Prisma ORM v7
+- **Database**: PostgreSQL v17
+- **Runtime**: Bun v1.3
 
 ## Iniciando
 
 ### Pré-requisitos
 
-- [Bun](https://bun.sh/) (versão mais recente)
-- [Docker](https://www.docker.com/) (para PostgreSQL)
+- [Bun](https://bun.sh/): v1.3.5+ _(versão mais recente)_
+- [Docker](https://www.docker.com/) v28.x+ _(para PostgreSQL em desenvolvimento)_
 
 ### Desenvolvimento
 
@@ -188,6 +200,10 @@ Cria um novo registro de cliente.
 
 ## Docker
 
+> [!NOTE]
+> O `docker-compose.yml` é apenas para **desenvolvimento local**.
+> Para deploy em produção, apenas o `Dockerfile` é usado (conectando a um banco de dados gerenciado externo). Veja [DEPLOY.md](docs/DEPLOY.md) para instruções de produção.
+
 ### Início Rápido (Desenvolvimento)
 
 Execute a aplicação completa com um único comando:
@@ -198,7 +214,7 @@ docker compose -f docker/docker-compose.yml up --build
 
 Isso iniciará:
 
-- **PostgreSQL 16** na porta 5432
+- **PostgreSQL 18** na porta 5432 (banco de dados local)
 - **Aplicação Next.js** na porta 3000 (modo desenvolvimento com hot-reload)
 
 Acesse [http://localhost:3000](http://localhost:3000) para usar a aplicação.

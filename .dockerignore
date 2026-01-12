@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+bun.lockb
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Generated files
+generated
+
+# Tests
+coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Development
+.env*.local
+.vscode
+.idea
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Misc
+.DS_Store
+*.log

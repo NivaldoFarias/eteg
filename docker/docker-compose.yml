@@ -1,8 +1,9 @@
 services:
-  db:
-    image: postgres:16.6-alpine
+  eteg-db:
+    image: postgres:17-alpine
     container_name: eteg-postgres
     restart: unless-stopped
+    env_file: ".env"
     environment:
       POSTGRES_DB: ${DATABASE_NAME:-eteg}
       POSTGRES_USER: ${DATABASE_USER:-eteg}
@@ -14,36 +15,47 @@ services:
     networks:
       - eteg-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U eteg -d eteg"]
+      test: [ "CMD-SHELL", "pg_isready -U eteg -d eteg" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  app:
+  eteg-app:
     build:
-      context: ../
+      context: .
       dockerfile: docker/Dockerfile
       target: ${DOCKER_BUILD_TARGET:-development}
     container_name: eteg-app
     restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
+    env_file: ".env"
     environment:
       - NODE_ENV=${NODE_ENV:-development}
-      - DATABASE_URL=${DATABASE_URL:-postgresql://eteg:eteg_dev_password@db:5432/eteg}
+      - DATABASE_URL=${DATABASE_URL:-postgresql://eteg:eteg_dev_password@eteg-db:5432/eteg}
+      - PORT=${APP_PORT:-3000}
+      - HOSTNAME=${HOSTNAME:-0.0.0.0}
     ports:
-      - "3000:${APP_PORT:-3000}"
+      - "${APP_PORT:-3000}:3000"
     volumes:
-      - ..:/app
+      - .:/app
       - /app/node_modules
       - /app/.next
+      - /app/generated
     networks:
       - eteg-network
     depends_on:
-      db:
+      eteg-db:
         condition: service_healthy
-    command: sh -c "bun run db:generate && bun run db:migrate && bun run dev"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://app:3000/api/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 volumes:
   eteg_postgres_data:
+
 
 networks:
   eteg-network:

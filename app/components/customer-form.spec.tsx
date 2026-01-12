@@ -6,7 +6,6 @@ import { ApiError } from "@/lib/api";
 
 import { CustomerForm } from "./customer-form";
 
-// Mock the API module
 vi.mock("@/lib/api", () => ({
 	ApiError: class ApiError extends Error {
 		constructor(
@@ -102,7 +101,7 @@ describe("CustomerForm", () => {
 					id: "customer-id",
 					fullName: "John Doe",
 					email: "john@example.com",
-					favoriteColor: "BLUE" as any,
+					favoriteColor: "BLUE",
 					createdAt: new Date(),
 				},
 			});
@@ -113,15 +112,8 @@ describe("CustomerForm", () => {
 			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
 			await user.type(screen.getByLabelText(/email/i), "john@example.com");
 
-			// Note: Skipping select interaction due to Radix UI Select limitations in jsdom
-			// The select component requires browser APIs that aren't available in jsdom
-
-			// Submit form (will fail validation due to missing favoriteColor, which is expected)
 			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
-
-			// In a real browser test, we would verify the API call here
-			// For now, we verify the validation error appears
 			await waitFor(() => {
 				expect(screen.getByText(/selecione uma cor válida/i)).toBeInTheDocument();
 			});

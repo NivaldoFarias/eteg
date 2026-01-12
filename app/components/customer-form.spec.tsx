@@ -26,25 +26,25 @@ describe("CustomerForm", () => {
 		test("renders all required form fields", () => {
 			render(<CustomerForm />);
 
-			expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
+			expect(screen.getByLabelText(/nome completo/i)).toBeInTheDocument();
 			expect(screen.getByLabelText(/cpf/i)).toBeInTheDocument();
 			expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-			expect(screen.getByLabelText(/favorite color/i)).toBeInTheDocument();
-			expect(screen.getByLabelText(/observations/i)).toBeInTheDocument();
+			expect(screen.getByLabelText(/cor favorita/i)).toBeInTheDocument();
+			expect(screen.getByLabelText(/observações/i)).toBeInTheDocument();
 		});
 
 		test("renders submit button", () => {
 			render(<CustomerForm />);
 
-			expect(screen.getByRole("button", { name: /submit registration/i })).toBeInTheDocument();
+			expect(screen.getByRole("button", { name: /enviar cadastro/i })).toBeInTheDocument();
 		});
 
 		test("renders form descriptions for guidance", () => {
 			render(<CustomerForm />);
 
-			expect(screen.getByText(/your complete legal name/i)).toBeInTheDocument();
-			expect(screen.getByText(/brazilian tax identification/i)).toBeInTheDocument();
-			expect(screen.getByText(/use this to contact you/i)).toBeInTheDocument();
+			expect(screen.getByText(/seu nome completo/i)).toBeInTheDocument();
+			expect(screen.getByText(/cadastro de pessoa física/i)).toBeInTheDocument();
+			expect(screen.getByText(/usaremos para contatá-lo/i)).toBeInTheDocument();
 		});
 	});
 
@@ -53,11 +53,11 @@ describe("CustomerForm", () => {
 			const user = userEvent.setup();
 			render(<CustomerForm />);
 
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/full name must be at least 2 characters/i)).toBeInTheDocument();
+				expect(screen.getByText(/no mínimo 2 caracteres/i)).toBeInTheDocument();
 			});
 		});
 
@@ -65,15 +65,15 @@ describe("CustomerForm", () => {
 			const user = userEvent.setup();
 			render(<CustomerForm />);
 
-			await user.type(screen.getByLabelText(/full name/i), "John Doe");
+			await user.type(screen.getByLabelText(/nome completo/i), "John Doe");
 			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
 			await user.type(screen.getByLabelText(/email/i), "invalid-email");
 
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/please provide a valid email address/i)).toBeInTheDocument();
+				expect(screen.getByText(/email válido/i)).toBeInTheDocument();
 			});
 		});
 
@@ -81,11 +81,11 @@ describe("CustomerForm", () => {
 			const user = userEvent.setup();
 			render(<CustomerForm />);
 
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/cpf is required/i)).toBeInTheDocument();
+				expect(screen.getByText(/cpf é obrigatório/i)).toBeInTheDocument();
 			});
 		});
 	});
@@ -109,7 +109,7 @@ describe("CustomerForm", () => {
 
 			render(<CustomerForm onSuccess={mockOnSuccess} />);
 
-			await user.type(screen.getByLabelText(/full name/i), "John Doe");
+			await user.type(screen.getByLabelText(/nome completo/i), "John Doe");
 			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
 			await user.type(screen.getByLabelText(/email/i), "john@example.com");
 
@@ -117,13 +117,13 @@ describe("CustomerForm", () => {
 			// The select component requires browser APIs that aren't available in jsdom
 
 			// Submit form (will fail validation due to missing favoriteColor, which is expected)
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			// In a real browser test, we would verify the API call here
 			// For now, we verify the validation error appears
 			await waitFor(() => {
-				expect(screen.getByText(/please select a valid color/i)).toBeInTheDocument();
+				expect(screen.getByText(/selecione uma cor válida/i)).toBeInTheDocument();
 			});
 		});
 	});
@@ -133,20 +133,20 @@ describe("CustomerForm", () => {
 			const user = userEvent.setup();
 			render(<CustomerForm />);
 
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/full name must be at least 2 characters/i)).toBeInTheDocument();
+				expect(screen.getByText(/no mínimo 2 caracteres/i)).toBeInTheDocument();
 			});
 		});
 
 		test("shows loading state during submission", () => {
 			render(<CustomerForm />);
 
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			expect(submitButton).not.toBeDisabled();
-			expect(submitButton).toHaveTextContent(/submit registration/i);
+			expect(submitButton).toHaveTextContent(/enviar cadastro/i);
 		});
 
 		test("displays error message on submission failure", async () => {
@@ -159,15 +159,15 @@ describe("CustomerForm", () => {
 
 			render(<CustomerForm />);
 
-			await user.type(screen.getByLabelText(/full name/i), "John Doe");
+			await user.type(screen.getByLabelText(/nome completo/i), "John Doe");
 			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
 			await user.type(screen.getByLabelText(/email/i), "john@example.com");
 
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/please select a valid color/i)).toBeInTheDocument();
+				expect(screen.getByText(/selecione uma cor válida/i)).toBeInTheDocument();
 			});
 		});
 	});
@@ -183,15 +183,15 @@ describe("CustomerForm", () => {
 
 			render(<CustomerForm />);
 
-			await user.type(screen.getByLabelText(/full name/i), "John Doe");
+			await user.type(screen.getByLabelText(/nome completo/i), "John Doe");
 			await user.type(screen.getByLabelText(/cpf/i), "12345678901");
 			await user.type(screen.getByLabelText(/email/i), "john@example.com");
 
-			const submitButton = screen.getByRole("button", { name: /submit registration/i });
+			const submitButton = screen.getByRole("button", { name: /enviar cadastro/i });
 			await user.click(submitButton);
 
 			await waitFor(() => {
-				expect(screen.getByText(/please select a valid color/i)).toBeInTheDocument();
+				expect(screen.getByText(/selecione uma cor válida/i)).toBeInTheDocument();
 			});
 		});
 	});

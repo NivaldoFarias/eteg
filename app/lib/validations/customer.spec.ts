@@ -24,7 +24,7 @@ describe("customerInputSchema", () => {
 			});
 
 			expect(result.success).toBe(false);
-			expect(result.error?.issues[0]?.message).toContain("at least 2 characters");
+			expect(result.error?.issues[0]?.message).toContain("no mínimo 2 caracteres");
 		});
 
 		test("rejects full name shorter than 2 characters", () => {
@@ -36,7 +36,7 @@ describe("customerInputSchema", () => {
 			});
 
 			expect(result.success).toBe(false);
-			expect(result.error?.issues[0]?.message).toContain("at least 2 characters");
+			expect(result.error?.issues[0]?.message).toContain("no mínimo 2 caracteres");
 		});
 
 		test("trims whitespace from full name", () => {
@@ -92,7 +92,7 @@ describe("customerInputSchema", () => {
 			});
 
 			expect(result.success).toBe(false);
-			expect(result.error?.issues[0]?.message).toContain("11 digits");
+			expect(result.error?.issues[0]?.message).toContain("11 dígitos");
 		});
 
 		test("rejects invalid CPF (wrong check digits)", () => {
@@ -104,7 +104,7 @@ describe("customerInputSchema", () => {
 			});
 
 			expect(result.success).toBe(false);
-			expect(result.error?.issues[0]?.message).toContain("invalid");
+			expect(result.error?.issues[0]?.message).toContain("inválido");
 		});
 
 		test("rejects CPF with all same digits", () => {
@@ -116,7 +116,7 @@ describe("customerInputSchema", () => {
 			});
 
 			expect(result.success).toBe(false);
-			expect(result.error?.issues[0]?.message).toContain("invalid");
+			expect(result.error?.issues[0]?.message).toContain("inválido");
 		});
 	});
 
@@ -166,7 +166,7 @@ describe("customerInputSchema", () => {
 			});
 
 			expect(result.success).toBe(false);
-			expect(result.error?.issues[0]?.message).toContain("valid email");
+			expect(result.error?.issues[0]?.message).toContain("email válido");
 		});
 	});
 
@@ -267,7 +267,7 @@ describe("customerInputSchema", () => {
 			});
 
 			expect(result.success).toBe(false);
-			expect(result.error?.issues[0]?.message).toContain("1000 characters");
+			expect(result.error?.issues[0]?.message).toContain("1000 caracteres");
 		});
 	});
 });

@@ -140,7 +140,7 @@ describe("POST /api/customers", () => {
 			{
 				name: "invalid CPF",
 				body: { ...validCustomerData, cpf: "12345678901" },
-				messageContains: "invalid",
+				messageContains: "inválido",
 			},
 			{
 				name: "invalid email format",
@@ -156,7 +156,7 @@ describe("POST /api/customers", () => {
 			{
 				name: "full name too short",
 				body: { ...validCustomerData, fullName: "J" },
-				messageContains: "at least 2 characters",
+				messageContains: "no mínimo 2 caracteres",
 			},
 		] satisfies {
 			name: string;

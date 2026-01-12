@@ -96,5 +96,13 @@ export default defineConfig(
 			globals: globals.node,
 		},
 	},
+	{
+		files: ["**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}", "**/tests/**/*.{ts,tsx}"],
+		languageOptions: {
+			globals: {
+				...globals.browser,
+			},
+		},
+	},
 	eslintConfigPrettier,
 );

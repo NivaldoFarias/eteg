@@ -44,6 +44,41 @@ bun run dev
 
 Abra [http://localhost:3000](http://localhost:3000) para ver a aplicação.
 
+## Uso da Aplicação
+
+### Formulário de Cadastro
+
+O formulário de cadastro de clientes está disponível na página principal da aplicação. Para cadastrar um novo cliente:
+
+1. **Nome Completo**: Digite o nome completo do cliente (mínimo 2 caracteres)
+2. **CPF**: Digite o CPF do cliente (com ou sem máscara, ex: `529.982.247-25` ou `52998224725`)
+3. **Email**: Digite um endereço de email válido
+4. **Cor Favorita**: Selecione uma das cores do arco-íris no dropdown
+5. **Observações** (opcional): Adicione notas adicionais sobre o cliente (máximo 1000 caracteres)
+6. Clique em **Enviar Cadastro**
+
+### Validações
+
+O formulário realiza validação em tempo real:
+
+- **CPF**: Deve ser um CPF brasileiro válido (verificação de dígitos)
+- **Email**: Deve ser um formato de email válido e único no sistema
+- **Campos obrigatórios**: Nome, CPF, Email e Cor Favorita são obrigatórios
+
+### Mensagens de Erro
+
+- **Dados inválidos**: Erros de validação são exibidos abaixo de cada campo
+- **CPF/Email duplicado**: Mensagem de erro indica qual campo já está cadastrado
+- **Erro de servidor**: Mensagem genérica solicitando nova tentativa
+
+### Sucesso
+
+Após cadastro bem-sucedido:
+
+- Uma notificação de sucesso é exibida
+- O formulário é limpo automaticamente
+- O cliente é persistido no banco de dados
+
 ## Scripts
 
 | Comando               | Descrição                               |

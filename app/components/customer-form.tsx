@@ -133,16 +133,12 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 		setSubmitError(null);
 
 		try {
-			const response = await createCustomer({
-				...data,
-				observations: data.observations || null,
-			});
+			const response = await createCustomer({ ...data, observations: data.observations || null });
 
 			if (response.success) {
 				toast.success("Cadastro realizado com sucesso", {
 					description: "Seu cadastro foi enviado com sucesso!",
 				});
-				form.reset();
 				onSuccess?.();
 			}
 		} catch (error) {

@@ -5,13 +5,11 @@ import { Pool } from "pg";
 
 import { PrismaClient } from "../../generated/prisma/client";
 
-const connectionString = `${process.env.DATABASE_URL}`;
-
 /** Connection pool with aggressive timeout for fast-fail behavior */
 const pool = new Pool({
-	connectionString,
-	connectionTimeoutMillis: 2_000, // 2 seconds
-	statement_timeout: 5_000, // 5 seconds per query
+	connectionString: process.env.DATABASE_URL,
+	connectionTimeoutMillis: 2_000,
+	statement_timeout: 5_000,
 });
 
 const adapter = new PrismaPg(pool);

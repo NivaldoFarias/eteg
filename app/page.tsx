@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { ReactElement } from "react";
 
 import { CustomerForm } from "@/components/customer-form";
@@ -24,6 +26,14 @@ export default function Page(): ReactElement {
 	function Header(): ReactElement {
 		return (
 			<header className="text-center">
+				<Image
+					src="/android-chrome-512x512.png"
+					alt="Eteg Logo"
+					width={64}
+					height={64}
+					preload={true}
+					className="mx-auto mb-4"
+				/>
 				<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
 					Cadastro de Clientes
 				</h1>

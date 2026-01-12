@@ -30,7 +30,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/generated ./generated
 COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 USER bun
 EXPOSE 3000
-CMD ["sh", "-c", "bun run db:migrate && bun server.js"]
+CMD ["sh", "-c", "bun run db:migrate:deploy && bun server.js"]

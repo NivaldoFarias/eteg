@@ -56,7 +56,12 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 	};
 
 	try {
-		await db.$queryRaw`SELECT 1`;
+		const healthCheckPromise = db.$queryRaw`SELECT 1`;
+		const timeoutPromise = new Promise<never>((_, reject) => {
+			setTimeout(() => reject(new Error("Database health check timed out")), 2_000);
+		});
+
+		await Promise.race([healthCheckPromise, timeoutPromise]);
 
 		return NextResponse.json(
 			{

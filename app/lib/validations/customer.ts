@@ -37,12 +37,8 @@ export const customerInputSchema = z.object({
 	cpf: z
 		.string({ error: "CPF é obrigatório" })
 		.transform(stripCpfMask)
-		.refine((value) => value.length === 11, {
-			message: "CPF deve ter exatamente 11 dígitos",
-		})
-		.refine((value) => validateCpf(value), {
-			message: "CPF é inválido",
-		}),
+		.refine((value) => value.length === 11, { message: "CPF deve ter exatamente 11 dígitos" })
+		.refine((value) => validateCpf(value), { message: "CPF inválido" }),
 
 	email: z
 		.email("Forneça um endereço de email válido")
@@ -50,9 +46,7 @@ export const customerInputSchema = z.object({
 		.toLowerCase()
 		.trim(),
 
-	favoriteColor: z.enum(FAVORITE_COLORS, {
-		error: "Selecione uma cor válida",
-	}),
+	favoriteColor: z.enum(FAVORITE_COLORS, { error: "Selecione uma cor válida" }),
 
 	observations: z
 		.string()
@@ -60,7 +54,7 @@ export const customerInputSchema = z.object({
 		.trim()
 		.optional()
 		.nullable()
-		.transform((val) => val || null),
+		.transform((value) => value || null),
 });
 
 /** Type for validated customer input data */

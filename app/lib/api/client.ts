@@ -91,7 +91,7 @@ export async function apiClient<T>(url: string, options?: RequestInit): Promise<
 		}
 
 		throw new ApiError(
-			"Ocorreu um erro inesperado. Tente novamente.",
+			"Ocorreu um erro inesperado. Tente novamente mais tarde.",
 			StatusCodes.INTERNAL_SERVER_ERROR,
 			"UNKNOWN_ERROR",
 		);

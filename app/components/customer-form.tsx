@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { generate as generateCpf } from "gerador-validador-cpf";
+import { RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
@@ -10,6 +12,8 @@ import { z } from "zod";
 import type { ReactElement } from "react";
 
 import { ApiError, createCustomer } from "@/lib/api";
+import { env } from "@/lib/env";
+import { customerInputSchema } from "@/lib/validations/customer";
 
 import { FavoriteColor } from "../../generated/prisma/enums";
 
@@ -25,27 +29,9 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Spinner } from "./ui/spinner";
 import { Textarea } from "./ui/textarea";
-
-/** Form schema for client-side validation before transformation */
-const formSchema = z.object({
-	fullName: z
-		.string()
-		.min(2, "Nome completo deve ter no mínimo 2 caracteres")
-		.max(255, "Nome completo deve ter no máximo 255 caracteres")
-		.trim(),
-	cpf: z.string().min(1, "CPF é obrigatório"),
-	email: z
-		.email("Forneça um endereço de email válido")
-		.max(255, "Email deve ter no máximo 255 caracteres"),
-	favoriteColor: z.enum(FavoriteColor, { message: "Selecione uma cor válida" }),
-	observations: z
-		.string()
-		.max(1000, "As observações devem ter no máximo 1000 caracteres")
-		.optional(),
-});
-
-type FormInput = z.infer<typeof formSchema>;
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 /** Color labels for user-friendly display */
 const COLOR_LABELS: Record<FavoriteColor, string> = {
@@ -58,10 +44,34 @@ const COLOR_LABELS: Record<FavoriteColor, string> = {
 	[FavoriteColor.VIOLET]: "Violeta",
 };
 
+/** Hex color values for visual indicators */
+const COLOR_HEX_VALUES: Record<FavoriteColor, string> = {
+	[FavoriteColor.RED]: "#ef4444",
+	[FavoriteColor.ORANGE]: "#f97316",
+	[FavoriteColor.YELLOW]: "#eab308",
+	[FavoriteColor.GREEN]: "#22c55e",
+	[FavoriteColor.BLUE]: "#3b82f6",
+	[FavoriteColor.INDIGO]: "#6366f1",
+	[FavoriteColor.VIOLET]: "#8b5cf6",
+};
+
+/** Check if demo mode is enabled */
+const isDemoMode = env.NEXT_PUBLIC_DEMO_ENABLED === true;
+
 interface CustomerFormProps {
 	/** Callback invoked when form submission succeeds */
 	onSuccess?: () => void;
 }
+
+const formSchema = customerInputSchema.extend({
+	observations: z
+		.string()
+		.max(1000, "As observações devem ter no máximo 1000 caracteres")
+		.trim()
+		.optional(),
+});
+
+type FormSchema = z.infer<typeof formSchema>;
 
 /**
  * Customer registration form component
@@ -82,17 +92,41 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 
-	const form = useForm<FormInput>({
+	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { fullName: "", cpf: "", email: "", favoriteColor: undefined, observations: "" },
 	});
+
+	/**
+	 * Maps error status codes to user-friendly Portuguese messages
+	 *
+	 * @param error API error instance
+	 *
+	 * @returns Localized user-friendly error message
+	 */
+	function getErrorMessage(error: ApiError): string {
+		switch (error.statusCode) {
+			case 400:
+				return error.message || "Dados inválidos. Verifique os campos e tente novamente.";
+			case 409:
+				return error.message || "CPF ou email já cadastrado.";
+			case 429:
+				return "Muitas tentativas. Aguarde um momento e tente novamente.";
+			case 500:
+				return "Erro no servidor. Tente novamente mais tarde.";
+			case 503:
+				return "Serviço temporariamente indisponível. Tente novamente mais tarde.";
+			default:
+				return "Ocorreu um erro inesperado. Tente novamente.";
+		}
+	}
 
 	/**
 	 * Handles form submission by sending data to API
 	 *
 	 * @param data Validated customer input data
 	 */
-	async function onSubmit(data: FormInput): Promise<void> {
+	async function onSubmit(data: FormSchema): Promise<void> {
 		setIsSubmitting(true);
 		setSubmitError(null);
 
@@ -111,14 +145,15 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 			}
 		} catch (error) {
 			if (error instanceof ApiError) {
-				setSubmitError(error.message);
-				toast.error("Falha no cadastro", { description: error.message });
-			} else {
-				const errorMessage = "Ocorreu um erro inesperado. Tente novamente.";
+				const errorMessage = getErrorMessage(error);
 				setSubmitError(errorMessage);
 				toast.error("Falha no cadastro", { description: errorMessage });
+				console.error("API error:", error);
+			} else {
+				const errorMessage = "Erro de conexão. Verifique sua internet e tente novamente.";
+				setSubmitError(errorMessage);
+				console.error("Form submission error:", error);
 			}
-			console.error("Form submission error:", error);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -126,7 +161,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" suppressHydrationWarning>
 				<FormField
 					control={form.control}
 					name="fullName"
@@ -148,16 +183,40 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>CPF</FormLabel>
-							<FormControl>
-								<IMaskInput
-									mask="000.000.000-00"
-									value={field.value}
-									onAccept={(value) => field.onChange(value)}
-									onBlur={field.onBlur}
-									placeholder="000.000.000-00"
-									className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-								/>
-							</FormControl>
+							<div className="flex gap-2">
+								<FormControl>
+									<IMaskInput
+										mask="000.000.000-00"
+										value={field.value}
+										onAccept={(value) => field.onChange(value)}
+										onBlur={field.onBlur}
+										placeholder="000.000.000-00"
+										className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+									/>
+								</FormControl>
+								{isDemoMode ?
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Button
+												type="button"
+												variant="outline"
+												size="icon"
+												onClick={() => {
+													const generatedCpf = generateCpf();
+													field.onChange(generatedCpf);
+												}}
+												className="h-9 w-9 shrink-0"
+												title="Gerar CPF válido (Demo)"
+											>
+												<RefreshCw className="h-4 w-4" />
+											</Button>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>Gerar CPF válido (Demo)</p>
+										</TooltipContent>
+									</Tooltip>
+								:	null}
+							</div>
 							<FormDescription>Cadastro de Pessoa Física</FormDescription>
 							<FormMessage />
 						</FormItem>
@@ -194,7 +253,17 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 								<SelectContent>
 									{Object.entries(COLOR_LABELS).map(([value, label]) => (
 										<SelectItem key={value} value={value}>
-											{label}
+											<div className="flex items-center gap-2">
+												<div
+													className="h-4 w-4 rounded border border-gray-300"
+													style={{
+														borderRadius: "100%",
+														backgroundColor: COLOR_HEX_VALUES[value as FavoriteColor],
+													}}
+													aria-hidden="true"
+												/>
+												<span>{label}</span>
+											</div>
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -229,8 +298,13 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					<div className="rounded-md bg-red-50 p-4 text-sm text-red-800">{submitError}</div>
 				:	null}
 
-				<Button type="submit" disabled={isSubmitting} className="w-full">
-					{isSubmitting ? "Enviando..." : "Enviar Cadastro"}
+				<Button type="submit" disabled={isSubmitting || !form.formState.isValid} className="w-full">
+					{isSubmitting ?
+						<>
+							<Spinner className="mr-2 h-4 w-4" />
+							Enviando...
+						</>
+					:	"Enviar Cadastro"}
 				</Button>
 			</form>
 		</Form>

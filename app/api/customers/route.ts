@@ -99,11 +99,29 @@ export async function POST(request: NextRequest): Promise<NextResponse<CustomerC
 	} catch (error) {
 		console.error("Customer creation error:", error);
 
+		// Check for database connection errors
+		if (
+			error instanceof Error &&
+			(error.message.includes("timeout") ||
+				error.message.includes("EAI_AGAIN") ||
+				error.message.includes("ECONNREFUSED") ||
+				error.message.includes("ENOTFOUND"))
+		) {
+			return NextResponse.json(
+				{
+					success: false,
+					error: "SERVICE_UNAVAILABLE",
+					message: "O serviço está temporariamente indisponível. Tente novamente em instantes.",
+				},
+				{ status: StatusCodes.SERVICE_UNAVAILABLE },
+			);
+		}
+
 		return NextResponse.json(
 			{
 				success: false,
 				error: "INTERNAL_ERROR",
-				message: "An unexpected error occurred. Please try again later.",
+				message: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
 			},
 			{ status: StatusCodes.INTERNAL_SERVER_ERROR },
 		);

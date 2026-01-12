@@ -60,22 +60,22 @@ Scrum board for the ETEG customer registration form assessment.
 
 ## Phase 5: Docker & Polish
 
-- [ ] Verify `docker-compose.yml` works for full stack
-- [ ] Test `docker compose up` from clean state
-- [ ] Add basic error boundary
-- [ ] Final cleanup and README update
-- [ ] Ensure all tests pass in CI environment
-- [ ] Update README with Docker instructions
+- [x] Verify `docker-compose.yml` works for full stack
+- [x] Test `docker compose up` from clean state
+- [x] Add basic error boundary
+- [x] Final cleanup and README update
+- [x] Ensure all tests pass in CI environment
+- [x] Update README with Docker instructions
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] Form submits successfully and persists to PostgreSQL
-- [ ] Duplicate CPF/email shows user-friendly error
-- [ ] Validation errors display inline
-- [ ] Success state is clearly communicated
-- [ ] `docker compose up` starts working application
-- [ ] Code is clean and maintainable
-- [ ] All tests pass (`bun run test`)
-- [ ] README documents setup, API, and usage
+- [x] Form submits successfully and persists to PostgreSQL
+- [x] Duplicate CPF/email shows user-friendly error
+- [x] Validation errors display inline
+- [x] Success state is clearly communicated
+- [x] `docker compose up` starts working application
+- [x] Code is clean and maintainable
+- [x] All tests pass (`bun run test`)
+- [x] README documents setup, API, and usage

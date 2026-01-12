@@ -186,11 +186,61 @@ Cria um novo registro de cliente.
 }
 ```
 
-## Docker para Produção
+## Docker
 
-Construa e execute com Docker:
+### Início Rápido (Desenvolvimento)
+
+Execute a aplicação completa com um único comando:
 
 ```bash
-docker build -f docker/Dockerfile -t eteg --target production .
-docker run -p 3000:3000 -e DATABASE_URL="your-db-url" eteg
+docker compose -f docker/docker-compose.yml up --build
 ```
+
+Isso iniciará:
+
+- **PostgreSQL 16** na porta 5432
+- **Aplicação Next.js** na porta 3000 (modo desenvolvimento com hot-reload)
+
+Acesse [http://localhost:3000](http://localhost:3000) para usar a aplicação.
+
+### Comandos Docker
+
+| Comando                                               | Descrição                          |
+| ----------------------------------------------------- | ---------------------------------- |
+| `docker compose -f docker/docker-compose.yml up -d`   | Iniciar em segundo plano           |
+| `docker compose -f docker/docker-compose.yml down`    | Parar containers                   |
+| `docker compose -f docker/docker-compose.yml logs`    | Ver logs                           |
+| `docker compose -f docker/docker-compose.yml down -v` | Parar e remover volumes (reset DB) |
+
+Ou use os scripts npm:
+
+```bash
+bun run docker:up      # Iniciar containers
+bun run docker:down    # Parar containers
+bun run docker:logs    # Ver logs
+```
+
+### Ambiente de Produção
+
+Para construir e executar em produção:
+
+```bash
+# Construir imagem de produção
+docker build -f docker/Dockerfile -t eteg --target production .
+
+# Executar com variáveis de ambiente
+docker run -p 3000:3000 \
+  -e DATABASE_URL="postgresql://user:pass@host:5432/db" \
+  -e NODE_ENV="production" \
+  eteg
+```
+
+### Variáveis de Ambiente
+
+| Variável            | Padrão                                             | Descrição                 |
+| ------------------- | -------------------------------------------------- | ------------------------- |
+| `DATABASE_URL`      | `postgresql://eteg:eteg_dev_password@db:5432/eteg` | URL de conexão PostgreSQL |
+| `NODE_ENV`          | `development`                                      | Ambiente de execução      |
+| `DATABASE_NAME`     | `eteg`                                             | Nome do banco de dados    |
+| `DATABASE_USER`     | `eteg`                                             | Usuário do banco          |
+| `DATABASE_PASSWORD` | `eteg_dev_password`                                | Senha do banco            |

@@ -41,6 +41,8 @@ export default defineConfig(
 				ecmaFeatures: { jsx: true },
 			},
 			globals: {
+				...globals.node,
+				...globals.browser,
 				...globals["shared-node-browser"],
 				...globals.serviceworker,
 				...globals.worker,
@@ -94,14 +96,6 @@ export default defineConfig(
 		files: ["**/*.mjs"],
 		languageOptions: {
 			globals: globals.node,
-		},
-	},
-	{
-		files: ["**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}", "**/tests/**/*.{ts,tsx}"],
-		languageOptions: {
-			globals: {
-				...globals.browser,
-			},
 		},
 	},
 	eslintConfigPrettier,

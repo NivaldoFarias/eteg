@@ -1,0 +1,58 @@
+"use client";
+
+import type { ReactElement } from "react";
+
+interface GlobalErrorProps {
+	error: Error & { digest?: string };
+	reset: () => void;
+}
+
+/**
+ * Global Error Boundary
+ *
+ * Catches errors that occur in the root layout. This is the last line of defense
+ * for unhandled errors. Must render its own html and body tags.
+ *
+ * @param props Error boundary props containing the error and reset function
+ *
+ * @returns Full HTML page with error UI
+ */
+export default function GlobalError({ error, reset }: GlobalErrorProps): ReactElement {
+	return (
+		<html lang="pt-BR">
+			<body className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4">
+				<div className="w-full max-w-md space-y-6 text-center">
+					<div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+						<svg
+							className="h-8 w-8 text-red-600"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+							aria-hidden="true"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+							/>
+						</svg>
+					</div>
+					<div className="space-y-2">
+						<h1 className="text-2xl font-bold tracking-tight text-gray-900">Erro Crítico</h1>
+						<p className="text-sm text-gray-600">
+							Ocorreu um erro crítico na aplicação. Por favor, recarregue a página.
+						</p>
+						{error.digest && <p className="text-xs text-gray-400">Código: {error.digest}</p>}
+					</div>
+					<button
+						onClick={reset}
+						className="inline-flex items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
+					>
+						Recarregar página
+					</button>
+				</div>
+			</body>
+		</html>
+	);
+}

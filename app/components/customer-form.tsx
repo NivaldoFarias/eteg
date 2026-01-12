@@ -39,7 +39,10 @@ const formSchema = z.object({
 		.email("Forneça um endereço de email válido")
 		.max(255, "Email deve ter no máximo 255 caracteres"),
 	favoriteColor: z.enum(FavoriteColor, { message: "Selecione uma cor válida" }),
-	observations: z.string().max(1000, "As observações devem ter no máximo 1000 caracteres").optional(),
+	observations: z
+		.string()
+		.max(1000, "As observações devem ter no máximo 1000 caracteres")
+		.optional(),
 });
 
 type FormInput = z.infer<typeof formSchema>;
@@ -216,9 +219,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 									value={field.value ?? ""}
 								/>
 							</FormControl>
-							<FormDescription>
-								Informações adicionais opcionais
-							</FormDescription>
+							<FormDescription>Informações adicionais opcionais</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}

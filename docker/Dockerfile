@@ -9,29 +9,29 @@ RUN bun install --frozen-lockfile
 
 FROM dependencies AS development
 
-USER bun
 COPY . .
 EXPOSE 3000
-RUN bun run db:generate 
+RUN bun run db:generate
 CMD ["sh", "-c", "bun run db:migrate && bun run dev"]
 
 FROM dependencies AS builder
 
 COPY . .
-RUN bun run db:generate 
+RUN bun run db:generate
 RUN bun run build
 
 FROM base AS production
 
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/generated ./generated
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=1001:1001 /app/next.config.mjs ./
+COPY --from=builder --chown=1001:1001 /app/.next/standalone ./
+COPY --from=builder --chown=1001:1001 /app/.next/static ./.next/static
+COPY --from=builder --chown=1001:1001 /app/public ./public
+COPY --from=builder --chown=1001:1001 /app/prisma ./prisma
+COPY --from=builder --chown=1001:1001 /app/generated ./generated
+COPY --from=dependencies --chown=1001:1001 /app/node_modules ./node_modules
+COPY --from=builder --chown=1001:1001 /app/package.json ./package.json
 
-USER bun
+USER 1001
 EXPOSE 3000
-CMD ["sh", "-c", "bun run db:migrate:deploy && bun server.js"]
+ENV NODE_ENV=production
+CMD ["bun", "run", "start"]

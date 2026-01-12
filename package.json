@@ -18,18 +18,16 @@
 		"test:coverage": "vitest run --coverage",
 		"db:generate": "bun prisma generate",
 		"db:migrate": "bun prisma migrate dev",
+		"ci:migrate": "bun run db:generate && bun run db:migrate:deploy",
 		"db:migrate:deploy": "bun prisma migrate deploy",
 		"db:studio": "bun prisma studio",
 		"docker:up": "docker compose --project-directory . -f docker/docker-compose.yml up -d",
-		"docker:up:db": "docker compose --project-directory . -f docker/docker-compose.yml up -d eteg-db",
-		"docker:up:app": "docker compose --project-directory . -f docker/docker-compose.yml up -d eteg-app",
 		"docker:up:build": "docker compose --project-directory . -f docker/docker-compose.yml up --build -d",
 		"docker:down": "docker compose --project-directory . -f docker/docker-compose.yml down -v",
-		"docker:down:db": "docker compose --project-directory . -f docker/docker-compose.yml down -v eteg-db",
-		"docker:down:app": "docker compose --project-directory . -f docker/docker-compose.yml down -v eteg-app",
 		"docker:logs": "docker compose --project-directory . -f docker/docker-compose.yml logs -f",
-		"docker:logs:db": "docker compose --project-directory . -f docker/docker-compose.yml logs -f eteg-db",
-		"docker:logs:app": "docker compose --project-directory . -f docker/docker-compose.yml logs -f eteg-app"
+		"docker:up:prod": "docker compose --project-directory . -f docker/docker-compose.prod.yml up --build -d",
+		"docker:down:prod": "docker compose --project-directory . -f docker/docker-compose.prod.yml down -v",
+		"docker:logs:prod": "docker compose --project-directory . -f docker/docker-compose.prod.yml logs -f"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.2",

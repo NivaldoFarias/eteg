@@ -1,3 +1,7 @@
+<div align="center">
+	<img src="https://raw.githubusercontent.com/NivaldoFarias/eteg/main/public/android-chrome-512x512.png" alt="Eteg Logo" width="150"  />
+</div>
+
 # Eteg - Sistema de Cadastro de Clientes
 
 Um formulário simples de registro de clientes construído com Next.js, React, Tailwind CSS, Prisma e PostgreSQL.

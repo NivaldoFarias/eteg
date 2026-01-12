@@ -15,7 +15,7 @@ services:
     networks:
       - eteg-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U eteg -d eteg" ]
+      test: ["CMD-SHELL", "pg_isready -U eteg -d eteg"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,7 +44,7 @@ services:
       eteg-db:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://app:3000/api/health || exit 1" ]
+      test: ["CMD-SHELL", "curl -f http://app:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -52,7 +52,6 @@ services:
 
 volumes:
   eteg_postgres_data:
-
 
 networks:
   eteg-network:

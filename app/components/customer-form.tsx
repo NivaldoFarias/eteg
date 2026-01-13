@@ -1,8 +1,8 @@
 "use client";
 
+import { faker } from "@faker-js/faker/locale/pt_BR";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { generate as generateCpf } from "gerador-validador-cpf";
-import { RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
@@ -27,11 +27,11 @@ import {
 	FormLabel,
 	FormMessage,
 } from "./ui/form";
+import { GenerateButton } from "./ui/generate-button";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Spinner } from "./ui/spinner";
 import { Textarea } from "./ui/textarea";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 /** Color labels for user-friendly display */
 const COLOR_LABELS: Record<FavoriteColor, string> = {
@@ -166,9 +166,20 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Nome Completo</FormLabel>
-							<FormControl>
-								<Input placeholder="Digite seu nome completo" {...field} />
-							</FormControl>
+							<div className="flex gap-2">
+								<FormControl>
+									<Input placeholder="Digite seu nome completo" {...field} />
+								</FormControl>
+								{isDemoMode ?
+									<GenerateButton
+										handleClick={() => {
+											field.onChange(faker.person.fullName());
+										}}
+										title="Gerar nome completo (Demo)"
+										className="h-9 w-9 shrink-0"
+									/>
+								:	null}
+							</div>
 							<FormDescription>Seu nome completo</FormDescription>
 							<FormMessage />
 						</FormItem>
@@ -193,26 +204,13 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 									/>
 								</FormControl>
 								{isDemoMode ?
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<Button
-												type="button"
-												variant="outline"
-												size="icon"
-												onClick={() => {
-													const generatedCpf = generateCpf();
-													field.onChange(generatedCpf);
-												}}
-												className="h-9 w-9 shrink-0"
-												title="Gerar CPF válido (Demo)"
-											>
-												<RefreshCw className="h-4 w-4" />
-											</Button>
-										</TooltipTrigger>
-										<TooltipContent>
-											<p>Gerar CPF válido (Demo)</p>
-										</TooltipContent>
-									</Tooltip>
+									<GenerateButton
+										handleClick={() => {
+											field.onChange(generateCpf());
+										}}
+										title="Gerar CPF válido (Demo)"
+										className="h-9 w-9 shrink-0"
+									/>
 								:	null}
 							</div>
 							<FormDescription>Cadastro de Pessoa Física</FormDescription>
@@ -227,9 +225,20 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Email</FormLabel>
-							<FormControl>
-								<Input placeholder="seu.email@example.com" {...field} />
-							</FormControl>
+							<div className="flex gap-2">
+								<FormControl>
+									<Input placeholder="seu.email@example.com" {...field} />
+								</FormControl>
+								{isDemoMode ?
+									<GenerateButton
+										handleClick={() => {
+											field.onChange(faker.internet.email());
+										}}
+										title="Gerar email (Demo)"
+										className="h-9 w-9 shrink-0"
+									/>
+								:	null}
+							</div>
 							<FormDescription>Usaremos para contatá-lo</FormDescription>
 							<FormMessage />
 						</FormItem>

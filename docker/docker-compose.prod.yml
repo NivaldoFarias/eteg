@@ -1,16 +1,17 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-      target: production
+    image: ghcr.io/nivaldofarias/eteg:latest
     container_name: eteg-app
     restart: unless-stopped
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=${NODE_ENV:-production}
       - DATABASE_URL=${DATABASE_URL}
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
+      - PORT=${PORT:-3000}
+      - HOSTNAME=${HOSTNAME:-0.0.0.0}
+      - NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED:-1}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - NEXT_PUBLIC_DEMO_ENABLED=${NEXT_PUBLIC_DEMO_ENABLED:-false}
     ports:
       - "3000:3000"
     healthcheck:

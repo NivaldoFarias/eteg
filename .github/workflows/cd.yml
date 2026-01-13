@@ -1,4 +1,4 @@
-name: Migrate, Build & Publish Docker Image
+name: Continuous Deployment
 
 on:
   push:

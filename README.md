@@ -7,18 +7,20 @@
 Um formulário simples de registro de clientes construído com Next.js, React, Tailwind CSS, Prisma e PostgreSQL.
 
 > [!IMPORTANT]
-> **Live Demo**: [https://eteg-7xyk.onrender.com](https://eteg-7xyk.onrender.com)
+>
+> - **Live Demo**: [`https://eteg-production.up.railway.app`](https://eteg-production.up.railway.app/)
+> - **Imagem Docker Oficial**: [`ghcr.io/nivaldofarias/eteg`](https://github.com/nivaldofarias/eteg/pkgs/container/eteg)
 
 <div align="center">
 
 [![CI Status](https://github.com/NivaldoFarias/eteg/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/NivaldoFarias/eteg/actions/workflows/ci.yml)
-[![API Health](https://img.shields.io/website?url=https%3A%2F%2Feteg-7xyk.onrender.com%2Fapi%2Fhealth&label=API%20Status&up_message=healthy&down_message=down)](https://eteg-7xyk.onrender.com/api/health/ready)
+[![API Health](https://img.shields.io/website?url=https%3A%2F%2Feteg-production.up.railway.app%2Fapi%2Fhealth&label=API%20Status&up_message=healthy&down_message=down)](https://eteg-production.up.railway.app/api/health/ready)
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16.1-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
 [![Bun](https://img.shields.io/badge/Bun-1.3.5-000000?logo=bun&logoColor=white)](https://bun.sh/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-7.2-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)

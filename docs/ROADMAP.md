@@ -69,14 +69,14 @@ Scrum board for the ETEG customer registration form assessment.
 
 ## Phase 6: Production Deployment
 
-- [ ] Create production Docker Compose override file
-- [ ] Set up GitHub Actions CI/CD workflow
-- [ ] Configure deployment
-- [ ] Set up PostgreSQL
-- [ ] Configure environment variables for production
-- [ ] Create `TECHNICAL_DECISIONS.md` documenting stack choices
-- [ ] Test full deployment pipeline
-- [ ] Verify production health checks
+- [x] Create production Docker Compose override file
+- [x] Set up GitHub Actions CI/CD workflow
+- [x] Configure deployment
+- [x] Set up PostgreSQL
+- [x] Configure environment variables for production
+- [x] Create `TECHNICAL_DECISIONS.md` documenting stack choices
+- [x] Test full deployment pipeline
+- [x] Verify production health checks
 
 ---
 

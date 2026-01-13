@@ -1,5 +1,5 @@
 services:
-  eteg-app:
+  app:
     build:
       context: .
       dockerfile: docker/Dockerfile

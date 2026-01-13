@@ -1,20 +1,23 @@
-FROM oven/bun:latest AS base
+FROM oven/bun:1.3-alpine AS base
 
 WORKDIR /app
 
-FROM base AS dependencies
+FROM base AS deps
 
+RUN apk add --no-cache libc6-compat curl
 COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile
 
-FROM dependencies AS development
+FROM deps AS development
+
+ENV NODE_ENV=development
 
 COPY . .
 EXPOSE 3000
 RUN bun run db:generate
-CMD ["sh", "-c", "bun run db:migrate && bun run dev"]
+CMD ["sh", "-c", "bun run db:migrate && bun run dev:webpack"]
 
-FROM dependencies AS builder
+FROM deps AS builder
 
 COPY . .
 RUN bun run db:generate
@@ -22,16 +25,21 @@ RUN bun run build
 
 FROM base AS production
 
-COPY --from=builder --chown=1001:1001 /app/next.config.mjs ./
-COPY --from=builder --chown=1001:1001 /app/.next/standalone ./
-COPY --from=builder --chown=1001:1001 /app/.next/static ./.next/static
-COPY --from=builder --chown=1001:1001 /app/public ./public
-COPY --from=builder --chown=1001:1001 /app/prisma ./prisma
-COPY --from=builder --chown=1001:1001 /app/generated ./generated
-COPY --from=dependencies --chown=1001:1001 /app/node_modules ./node_modules
-COPY --from=builder --chown=1001:1001 /app/package.json ./package.json
-
-USER 1001
-EXPOSE 3000
 ENV NODE_ENV=production
-CMD ["bun", "run", "start"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.mjs ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/generated ./generated
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+USER nextjs
+EXPOSE 3000
+CMD ["bun", "server.js"]

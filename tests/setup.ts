@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 
 import { cleanup } from "@testing-library/react";
-import { afterEach } from "vitest";
+import { afterEach, vi } from "vitest";
 
 /** Mock hasPointerCapture for Radix UI Select component */
 if (typeof Element !== "undefined") {
@@ -15,4 +15,5 @@ if (typeof Element !== "undefined") {
 
 afterEach(() => {
 	cleanup();
+	vi.clearAllMocks();
 });

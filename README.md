@@ -1,5 +1,5 @@
 <div align="center">
-	<img src="https://raw.githubusercontent.com/NivaldoFarias/eteg/main/public/android-chrome-512x512.png" alt="Eteg Logo" width="150"  />
+	<img src="./public/android-chrome-512x512.png" alt="Eteg Logo" width="150"  />
 </div>
 
 # Eteg - Sistema de Cadastro de Clientes
@@ -74,10 +74,10 @@ Abra [http://localhost:3000](http://localhost:3000) para ver a aplicação.
 O formulário de cadastro de clientes está disponível na página principal da aplicação. Para cadastrar um novo cliente:
 
 1. **Nome Completo**: Digite o nome completo do cliente (mínimo 2 caracteres)
-2. **CPF**: Digite o CPF do cliente (com ou sem máscara, ex: `529.982.247-25` ou `52998224725`)
+2. **CPF**: Digite o CPF do cliente
 3. **Email**: Digite um endereço de email válido
 4. **Cor Favorita**: Selecione uma das cores do arco-íris no dropdown
-5. **Observações** (opcional): Adicione notas adicionais sobre o cliente (máximo 1000 caracteres)
+5. **Observações** (opcional): Adicione notas adicionais sobre o cliente
 6. Clique em **Enviar Cadastro**
 
 ### Validações

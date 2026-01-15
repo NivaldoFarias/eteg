@@ -104,9 +104,7 @@ describe("CustomerForm", () => {
 				expect(screen.getByText(/selecione uma cor válida/i)).toBeInTheDocument();
 			});
 		});
-	});
 
-	describe("form submission", () => {
 		test("shows validation error when required fields are missing", async () => {
 			const user = userEvent.setup();
 			render(<CustomerForm />);

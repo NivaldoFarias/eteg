@@ -36,38 +36,28 @@ Um formulário simples de registro de clientes construído com Next.js, React, T
 
 ## Iniciando
 
-### Pré-requisitos
-
-- [Bun](https://bun.sh/): v1.3.5+ _(versão mais recente)_
-- [Docker](https://www.docker.com/) v28.x+ _(para PostgreSQL em desenvolvimento)_
-
 ### Desenvolvimento
 
-1. Instale as dependências:
+#### Pré-requisitos
 
-```bash
-bun install
-```
+- [Bun](https://bun.sh/): v1.3+ _(versão mais recente)_
+- [Docker](https://www.docker.com/) v28.x+
+- [PostgreSQL](https://www.postgresql.org/): v17.x+ _(local ou via Docker)_
 
-2. Inicie o PostgreSQL via Docker:
+#### Passo-a-passo
 
-```bash
-bun run docker:up
-```
+1. Instale as dependências: `bun install`
+2. Inicie o PostgreSQL.
+   2.1. Localmente: `sudo service postgresql start`
+   2.2. Via Docker: `bun run docker:up`
+3. Caso esteja rodando localmente, configure o banco de dados e as variáveis de ambiente:
+   3.1. Crie o banco de dados `eteg`: `createdb eteg`
+   3.2. Copie o arquivo de variáveis de ambiente: `cp .env.example .env`
+   3.3. Edite o arquivo `.env` para ajustar as credenciais do banco de dados, se necessário:
+4. Execute as migrações do banco de dados: `bun run db:migrate`
+5. Inicie o servidor de desenvolvimento: `bun run dev`
 
-3. Execute as migrações do banco de dados:
-
-```bash
-bun run db:migrate
-```
-
-4. Inicie o servidor de desenvolvimento:
-
-```bash
-bun run dev
-```
-
-Abra [http://localhost:3000](http://localhost:3000) para ver a aplicação.
+Abra [http://localhost:3000](http://localhost:3000) para ver a aplicação rodando.
 
 ## Uso da Aplicação
 
@@ -106,19 +96,47 @@ Após cadastro bem-sucedido:
 
 ## Scripts
 
-| Comando               | Descrição                               |
-| --------------------- | --------------------------------------- |
-| `bun run dev`         | Iniciar servidor de desenvolvimento     |
-| `bun run build`       | Build para produção                     |
-| `bun run start`       | Iniciar servidor de produção            |
-| `bun run lint`        | Executar ESLint                         |
-| `bun run type-check`  | Executar verificação de tipo TypeScript |
-| `bun run test`        | Executar testes unitários               |
-| `bun run test:watch`  | Executar testes em modo watch           |
-| `bun run db:migrate`  | Executar migrações do banco             |
-| `bun run db:studio`   | Abrir Prisma Studio                     |
-| `bun run docker:up`   | Iniciar container PostgreSQL            |
-| `bun run docker:down` | Parar container PostgreSQL              |
+### Scripts Essenciais
+
+Nesta tabela, listamos apenas os scripts mais essenciais para o desenvolvimento e manutenção do projeto.
+
+| Comando               | Descrição                                                                  |
+| --------------------- | -------------------------------------------------------------------------- |
+| `bun run dev`         | Inicia servidor de desenvolvimento                                         |
+| `bun run build`       | Build completo da aplicação Next.js para produção                          |
+| `bun run start`       | Inicia servidor de produção                                                |
+| `bun run format`      | Executa Prettier                                                           |
+| `bun run lint`        | Executa ESLint                                                             |
+| `bun run type-check`  | Executa verificação de tipagens TypeScript                                 |
+| `bun run test`        | Executa a suite de testes                                                  |
+| `bun run test:watch`  | Executa testes em modo watch                                               |
+| `bun run db:generate` | Gera cliente Prisma a partir do schema                                     |
+| `bun run db:migrate`  | Executa migrações do banco _(exige que `DATABASE_URL` esteja configurada)_ |
+| `bun run docker:up`   | Inicia containers de desenvolvimento local                                 |
+| `bun run docker:down` | Para containers de desenvolvimento local                                   |
+
+### Scripts Avançados
+
+| Comando                     | Descrição                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `bun run dev:webpack`       | Inicia servidor de desenvolvimento com Webpack ao invés do Turbopack                                                |
+| `bun run db:studio`         | Abre Prisma Studio                                                                                                  |
+| `bun run format:check`      | Executa verificação do formato do código _(Prettier)_                                                               |
+| `bun run test:quiet`        | Executa a suite de testes em modo menos verboso                                                                     |
+| `bun run test:coverage`     | Executa a suite de testes, extraindo dados de cobertura de código                                                   |
+| `bun run db:migrate:deploy` | Executa migrações do banco em ambiente de produção                                                                  |
+| `bun run docker:up:build`   | Re-constrói imagens Docker e inicia containers                                                                      |
+| `bun run docker:logs`       | Exibe logs dos containers Docker rodando atualmente                                                                 |
+| `bun run docker:up:prod`    | Inicia container Next.js em modo de produção _(veja [`docker-compose.prod.yml`](./docker/docker-compose.prod.yml))_ |
+| `bun run docker:down:prod`  | Para containers Docker em modo de produção                                                                          |
+| `bun run docker:logs:prod`  | Exibe logs dos containers Docker em modo de produção                                                                |
+
+### Scripts Auxiliares
+
+| Comando                       | Descrição                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------- |
+| `bun run docker-compose`      | Comando auxiliar Docker Compose _(usa `docker-compose.yml`)_                    |
+| `bun run docker-compose:prod` | Comando auxiliar Docker Compose para produção _(usa `docker-compose.prod.yml`)_ |
 
 ## Schema do Banco de Dados
 
@@ -134,13 +152,13 @@ Após cadastro bem-sucedido:
 | `observations`  | `String?`            | Notas opcionais (máx 1000 caracteres)       |
 | `createdAt`     | `DateTime`           | Timestamp do cadastro                       |
 
-### Enum FavoriteColor
+### Enum `FavoriteColor`
 
 `RED` | `ORANGE` | `YELLOW` | `GREEN` | `BLUE` | `INDIGO` | `VIOLET`
 
 ## Referência da API
 
-### POST /api/customers
+### POST `/api/customers`
 
 Cria um novo registro de cliente.
 
@@ -159,14 +177,14 @@ Cria um novo registro de cliente.
 | Campo           | Tipo     | Obrigatório | Descrição                                                |
 | --------------- | -------- | ----------- | -------------------------------------------------------- |
 | `fullName`      | `string` | Sim         | 2-255 caracteres                                         |
-| `cpf`           | `string` | Sim         | CPF válido (com ou sem máscara)                          |
+| `cpf`           | `string` | Sim         | CPF válido                                               |
 | `email`         | `string` | Sim         | Endereço de email válido                                 |
 | `favoriteColor` | `string` | Sim         | Uma de: RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET |
 | `observations`  | `string` | Não         | Máx 1000 caracteres                                      |
 
 #### Respostas
 
-**201 Created** - Cliente registrado com sucesso
+##### `201` **Created** - Cliente registrado com sucesso
 
 ```json
 {
@@ -181,7 +199,7 @@ Cria um novo registro de cliente.
 }
 ```
 
-**400 Bad Request** - Erro de validação
+##### `400` **Bad Request** - Erro de validação
 
 ```json
 {
@@ -191,7 +209,7 @@ Cria um novo registro de cliente.
 }
 ```
 
-**409 Conflict** - CPF ou email duplicado
+##### `409` **Conflict** - CPF ou email duplicado
 
 ```json
 {
@@ -201,7 +219,7 @@ Cria um novo registro de cliente.
 }
 ```
 
-**500 Internal Server Error** - Erro de servidor
+##### `500` **Internal Server Error** - Erro de servidor
 
 ```json
 {
@@ -209,59 +227,6 @@ Cria um novo registro de cliente.
 	"error": "INTERNAL_ERROR",
 	"message": "Ocorreu um erro inesperado. Tente novamente mais tarde."
 }
-```
-
-## Docker
-
-> [!NOTE]
-> O `docker-compose.yml` é apenas para **desenvolvimento local**.
-> Para deploy em produção, apenas o `Dockerfile` é usado (conectando a um banco de dados gerenciado externo). Veja [DEPLOY.md](docs/DEPLOY.md) para instruções de produção.
-
-### Início Rápido (Desenvolvimento)
-
-Execute a aplicação completa com um único comando:
-
-```bash
-docker compose -f docker/docker-compose.yml up --build
-```
-
-Isso iniciará:
-
-- **PostgreSQL 18** na porta 5432 (banco de dados local)
-- **Aplicação Next.js** na porta 3000 (modo desenvolvimento com hot-reload)
-
-Acesse [http://localhost:3000](http://localhost:3000) para usar a aplicação.
-
-### Comandos Docker
-
-| Comando                                               | Descrição                          |
-| ----------------------------------------------------- | ---------------------------------- |
-| `docker compose -f docker/docker-compose.yml up -d`   | Iniciar em segundo plano           |
-| `docker compose -f docker/docker-compose.yml down`    | Parar containers                   |
-| `docker compose -f docker/docker-compose.yml logs`    | Ver logs                           |
-| `docker compose -f docker/docker-compose.yml down -v` | Parar e remover volumes (reset DB) |
-
-Ou use os scripts npm:
-
-```bash
-bun run docker:up      # Iniciar containers
-bun run docker:down    # Parar containers
-bun run docker:logs    # Ver logs
-```
-
-### Ambiente de Produção
-
-Para construir e executar em produção:
-
-```bash
-# Construir imagem de produção
-docker build -f docker/Dockerfile -t eteg --target production .
-
-# Executar com variáveis de ambiente
-docker run -p 3000:3000 \
-  -e DATABASE_URL="postgresql://user:pass@host:5432/db" \
-  -e NODE_ENV="production" \
-  eteg
 ```
 
 ### Variáveis de Ambiente
@@ -273,3 +238,53 @@ docker run -p 3000:3000 \
 | `DATABASE_NAME`     | `eteg`                                             | Nome do banco de dados    |
 | `DATABASE_USER`     | `eteg`                                             | Usuário do banco          |
 | `DATABASE_PASSWORD` | `eteg_dev_password`                                | Senha do banco            |
+
+## CI/CD
+
+Este projeto possui integração contínua (CI) e entrega contínua (CD) configuradas via GitHub Actions.
+
+### Integração Contínua (CI)
+
+A pipeline de CI é definida em [`ci.yml`](.github/workflows/ci.yml) e inclui os seguintes fluxos paralelos:
+
+```mermaid
+flowchart LR
+    subgraph Lint_Format_Type_Check["Lint, Format, and Type Check"]
+        A1[Checkout repository] --> A2[Setup Bun]
+        A2 --> A3[Cache node_modules]
+        A3 --> A4[Install dependencies]
+        A4 --> A5[Generate Prisma client]
+        A5 --> A6[Run linter]
+        A6 --> A7[Check formatting]
+        A7 --> A8[Run type checker]
+    end
+
+    subgraph Run_Tests["Run Tests"]
+        B1[Checkout repository] --> B2[Setup Bun]
+        B2 --> B3[Cache node_modules]
+        B3 --> B4[Install dependencies]
+        B4 --> B5[Generate Prisma client]
+        B5 --> B6[Run Tests Suite with Coverage]
+    end
+```
+
+### Entrega Contínua (CD)
+
+A pipeline de CD é definida em [`cd.yml`](.github/workflows/cd.yml) e inclui os seguintes fluxos:
+
+```mermaid
+flowchart LR
+    subgraph Run_migrations["Run migrations"]
+        A1[Checkout repository] --> A2[Setup Bun]
+        A2 --> A3[Cache node_modules]
+        A3 --> A4[Install dependencies]
+        A4 --> A5[Generate prisma client]
+				A5 --> A6[Run migrations]
+    end
+
+    subgraph Build_Publish_Docker_Image["Build & Publish Docker Image"]
+        B1[Checkout repository] --> B2[Log in to the Container registry]
+        B2 --> B3["Extract metadata (tags, labels)"]
+        B3 --> B4[Build and push Docker image]
+    end
+```

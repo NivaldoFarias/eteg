@@ -35,10 +35,10 @@ jobs:
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: bun install --frozen-lockfile
 
-      - name: Generate Prisma client
+      - name: Generate prisma client
         run: bun run db:generate
 
-      - name: Run migrations (deploy)
+      - name: Run migrations
         run: bun run db:migrate:deploy
 
   build-and-publish:

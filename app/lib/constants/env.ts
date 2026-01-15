@@ -11,16 +11,19 @@ export enum RuntimeEnvironment {
  *
  * @remarks Used as fallbacks when environment variables are not set
  */
-export enum EnvironmentDefaults {
+export const environmentDefaults = {
 	/** Default runtime environment */
-	NODE_ENV = RuntimeEnvironment.Development,
+	NODE_ENV: RuntimeEnvironment.Development,
 
 	/** Default database connection string for local development */
-	DATABASE_URL = "postgresql://eteg:eteg_dev_password@localhost:5432/eteg",
+	DATABASE_URL: "postgresql://eteg:eteg_dev_password@localhost:5432/eteg",
 
 	/** Default application URL for local development */
-	APP_URL = "http://localhost:3000",
+	APP_URL: "http://localhost:3000",
 
 	/** Default API URL for local development */
-	API_URL = "http://localhost:3000/api",
-}
+	API_URL: "http://localhost:3000/api",
+
+	/** Default demo mode flag */
+	DEMO_ENABLED: false,
+} as const;

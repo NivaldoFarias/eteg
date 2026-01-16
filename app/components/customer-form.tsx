@@ -12,7 +12,6 @@ import { z } from "zod";
 import type { ReactElement } from "react";
 
 import { ApiError, createCustomer } from "@/lib/api";
-import { env } from "@/lib/env";
 import { customerInputSchema } from "@/lib/validations/customer";
 
 import { FavoriteColor } from "../../generated/prisma/enums";
@@ -55,12 +54,16 @@ const COLOR_HEX_VALUES: Record<FavoriteColor, string> = {
 	[FavoriteColor.VIOLET]: "#8b5cf6",
 };
 
-/** Check if demo mode is enabled */
-const isDemoMode = env.NEXT_PUBLIC_DEMO_ENABLED === true;
-
 interface CustomerFormProps {
 	/** Callback invoked when form submission succeeds */
 	onSuccess?: () => void;
+
+	/**
+	 * Flag to enable or disable demo mode
+	 *
+	 * @default false
+	 */
+	demoEnabled?: boolean;
 }
 
 const formSchema = customerInputSchema.extend({
@@ -88,7 +91,7 @@ type FormSchema = z.infer<typeof formSchema>;
  * <CustomerForm onSuccess={() => console.log("Customer registered")} />
  * ```
  */
-export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
+export function CustomerForm({ onSuccess, demoEnabled = false }: CustomerFormProps): ReactElement {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -170,7 +173,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 								<FormControl>
 									<Input placeholder="Digite seu nome completo" {...field} />
 								</FormControl>
-								{isDemoMode ?
+								{demoEnabled ?
 									<GenerateButton
 										handleClick={() => {
 											field.onChange(faker.person.fullName());
@@ -203,7 +206,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 										className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
 									/>
 								</FormControl>
-								{isDemoMode ?
+								{demoEnabled ?
 									<GenerateButton
 										handleClick={() => {
 											field.onChange(generateCpf());
@@ -229,7 +232,7 @@ export function CustomerForm({ onSuccess }: CustomerFormProps): ReactElement {
 								<FormControl>
 									<Input placeholder="seu.email@example.com" {...field} />
 								</FormControl>
-								{isDemoMode ?
+								{demoEnabled ?
 									<GenerateButton
 										handleClick={() => {
 											field.onChange(faker.internet.email());

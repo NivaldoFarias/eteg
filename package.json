@@ -20,7 +20,6 @@
 		"test:coverage": "vitest run --coverage",
 		"db:generate": "bun prisma generate",
 		"db:migrate": "bun prisma migrate dev",
-		"ci:migrate": "bun run db:generate && bun run db:migrate:deploy",
 		"db:migrate:deploy": "bun prisma migrate deploy",
 		"db:studio": "bun prisma studio",
 		"docker-compose": "docker compose --project-directory . -f docker/docker-compose.yml",

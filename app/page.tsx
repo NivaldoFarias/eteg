@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { ReactElement } from "react";
 
 import { CustomerForm } from "@/components/customer-form";
+import { env } from "@/lib/env";
 
 /**
  * Customer Registration Page
@@ -13,11 +14,13 @@ import { CustomerForm } from "@/components/customer-form";
  * @returns Page component with registration form
  */
 export default function Page(): ReactElement {
+	const isDemoEnabled = env.DEMO_ENABLED;
+
 	return (
 		<main className="flex flex-1 flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
 			<div className="w-full max-w-md space-y-8">
 				<Header />
-				<CustomerForm />
+				<CustomerForm demoEnabled={isDemoEnabled} />
 			</div>
 		</main>
 	);

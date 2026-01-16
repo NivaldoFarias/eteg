@@ -99,7 +99,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<CustomerC
 	} catch (error) {
 		console.error("Customer creation error:", error);
 
-		// Check for database connection errors
 		if (
 			error instanceof Error &&
 			(error.message.includes("timeout") ||

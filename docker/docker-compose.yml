@@ -3,7 +3,6 @@ services:
     image: postgres:17-alpine
     container_name: eteg-postgres
     restart: unless-stopped
-    env_file: ".env"
     environment:
       POSTGRES_DB: ${DATABASE_NAME:-eteg}
       POSTGRES_USER: ${DATABASE_USER:-eteg}

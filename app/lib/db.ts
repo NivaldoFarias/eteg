@@ -1,13 +1,13 @@
-import "dotenv/config";
-
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
 import { PrismaClient } from "../../generated/prisma/client";
 
+import { env } from "./env";
+
 /** Connection pool with aggressive timeout for fast-fail behavior */
 const pool = new Pool({
-	connectionString: process.env.DATABASE_URL,
+	connectionString: env.DATABASE_URL,
 	connectionTimeoutMillis: 2_000,
 	statement_timeout: 5_000,
 });
